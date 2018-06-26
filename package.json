@@ -1,0 +1,33 @@
+{
+  "name": "panicinthedark",
+  "version": "1.0.0",
+  "description": "Isometric Multiplayer Maze Chase Game",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PaulLNH/PanicInTheDark.git"
+  },
+  "keywords": [
+    "HTML5",
+    "JavaScript",
+    "node.js",
+    "express",
+    "MySQL",
+    "Firebase",
+    "Multiplayer",
+    "Maze",
+    "Chase",
+    "Isometric",
+    "Game"
+  ],
+  "author": "Corey Decato, Jashan Ahuja, Paul Laird",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/PaulLNH/PanicInTheDark/issues"
+  },
+  "homepage": "https://github.com/PaulLNH/PanicInTheDark#readme"
+}
