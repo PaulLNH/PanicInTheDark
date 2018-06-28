@@ -1,8 +1,8 @@
 var ctx = document.getElementById("ctx").getContext("2d");
 ctx.font = '30px Arial';
 
-var HEIGHT = 480;
-var WIDTH = 640;
+var HEIGHT = 600;
+var WIDTH = 800;
 
 var Img = {};
 Img.player = new Image();
@@ -30,9 +30,12 @@ var player = {
     pressingRight: false,
 };
 
+// Reference for drawing images:
+// ctx.drawImage(image, cropStartX, cropStartY, cropWidth, cropHeight, drawX, drawY, drawWidth, drawHeight);
+
 drawMap = function () {
     ctx.save();
-    ctx.drawImage(Img.map, 0, 0, Img.map.width, Img.map.height, 0, 0, Img.map.width, Img.map.height);
+    ctx.drawImage(Img.map, 0, 0, Img.map.width, Img.map.height, 0, 0, WIDTH, HEIGHT);
     ctx.restore();
 }
 
@@ -42,6 +45,36 @@ drawPlayer = function (char) {
     var y = char.y - char.height / 2;
     ctx.drawImage(char.img, x, y);
     ctx.restore();
+
+    ////////////////////// LOGIC FOR ANIMATION TO REVERSE ENGINEER /////////////////
+    // x += WIDTH/2;
+    // y += HEIGHT/2;
+
+    // x -= char.width/2;
+    // y -= char.height/2;
+
+    // var frameWidth = char.img.width/3;
+    // var frameHeight = char.img.height/4;
+
+    // var aimAngle = char.aimAngle;
+    // if(aimAngle < 0)
+    //     aimAngle = 360 + aimAngle;
+
+    // var directionMod = 3;	//draw right
+    // if(aimAngle >= 45 && aimAngle < 135)	//down
+    //     directionMod = 2;
+    // else if(aimAngle >= 135 && aimAngle < 225)	//left
+    //     directionMod = 1;
+    // else if(aimAngle >= 225 && aimAngle < 315)	//up
+    //     directionMod = 0;
+
+    // var walkingMod = Math.floor(char.spriteAnimCounter) % 3;//1,2
+
+    // ctx.drawImage(char.img,
+    //     walkingMod*frameWidth,directionMod*frameHeight,frameWidth,frameHeight,
+    //     x,y,char.width,char.height
+    // );
+    ////////////////////// LOGIC FOR ANIMATION TO REVERSE ENGINEER /////////////////
 }
 
 
