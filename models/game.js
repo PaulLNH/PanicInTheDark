@@ -1,4 +1,6 @@
 var ctx = document.getElementById("ctx").getContext("2d");
+ctx.width = 800;
+ctx.height = 600;
 ctx.font = '30px Arial';
 
 var HEIGHT = 600;
@@ -15,6 +17,10 @@ Img.upgrade2 = new Image();
 Img.upgrade2.src = '../public/assets/img/upgrade1.png';
 Img.map = new Image();
 Img.map.src = '../public/assets/img/hospital.png';
+
+Player = function (name, id, sprite) {
+    // Player Constructor
+}
 
 var player = {
     x: 50,
