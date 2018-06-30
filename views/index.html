@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Panic In The Dark - Will You Survive The Human Race?</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script> -->
     <!-- Bootstrap 4.1 -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4"
         crossorigin="anonymous">
@@ -27,14 +28,42 @@
 
 
     <!-- <script src="../models/entities.js"></script> -->
-    <script src="../models/game.js"></script>
-    <!-- <script src="../models/menu.js"></script> -->
+    <!-- <script src="../models/game.js"></script> -->
+    <script src="../models/menu.js"></script>
 
     <!-- Look into https://socket.io/get-started/chat/ for multiplayer if Firebase does not work out -->
-    <!-- <script src="/socket.io/socket.io.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
     <script>
         var socket = io();
-    </script> -->
+		
+	socket.on('newPositions',function(data){
+		ctx.clearRect(0,0,500,500);
+		for(var i = 0 ; i < data.length; i++)
+			ctx.fillText(data[i].number,data[i].x,data[i].y);		
+	});
+
+	document.onkeydown = function(event){
+        if(event.keyCode === 68)	//d
+            socket.emit('keyPress',{inputId:'right',state:true});
+		else if(event.keyCode === 83)	//s
+			socket.emit('keyPress',{inputId:'down',state:true});
+		else if(event.keyCode === 65) //a
+			socket.emit('keyPress',{inputId:'left',state:true});
+		else if(event.keyCode === 87) // w
+			socket.emit('keyPress',{inputId:'up',state:true});
+			
+	}
+	document.onkeyup = function(event){
+		if(event.keyCode === 68)	//d
+			socket.emit('keyPress',{inputId:'right',state:false});
+		else if(event.keyCode === 83)	//s
+			socket.emit('keyPress',{inputId:'down',state:false});
+		else if(event.keyCode === 65) //a
+			socket.emit('keyPress',{inputId:'left',state:false});
+		else if(event.keyCode === 87) // w
+			socket.emit('keyPress',{inputId:'up',state:false});
+	}
+    </script>
 </body>
 
 </html>
