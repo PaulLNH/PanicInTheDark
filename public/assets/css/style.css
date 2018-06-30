@@ -1,4 +1,21 @@
+/* This code allows canvas to scale to the viewport.
+Code would need to be adjusted to fit the ctx.width and ctx.height */
+
+/* html,
+body {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    margin: 0;
+}
+
+#ctx {
+    height: 100vh;
+    width: auto;
+} */
+
 body {
     background-color: black;
     overflow-x: hidden;
+    overflow-y: hidden;
 }
