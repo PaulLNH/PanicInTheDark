@@ -4,9 +4,12 @@ var ctx = document.getElementById("ctx").getContext("2d");
 ctx.font = "30px Arial";
 
 // Sets tile size (our sprites are default of 16px, we display 32px if we zoom into the map)
-var TILE_SIZE = 32;
-var HEIGHT = 600;
-var WIDTH = 800;
+// var TILE_SIZE = 32;  // Probably not needed
+var TILE_SIZE = 16;
+// var HEIGHT = 600;
+// var WIDTH = 800;
+var HEIGHT = 480;
+var WIDTH = 640;
 var timerId = 0;
 var frames = 30;
 
@@ -31,6 +34,11 @@ testCollisionRectRect = function (rect1, rect2) {
 
 //////// CUSTOM PLAYER CONSTRUCTOR ///////////////
 Player = function (name, id, x, y, img) {
+
+    // ToDo Make these speeds global
+    var fastSpeed = 6;
+    var slowSpeed = 4;
+
     //////////// TAKEN FROM ENTITY CONSTRUCTOR ////////////
     // Gives self properties from constructor, this saves the instance of the object instead of using 'this' which is dynamic
     var self = {
@@ -38,9 +46,27 @@ Player = function (name, id, x, y, img) {
         id: id,
         x: x,
         y: y,
+        width: 15,
+        height: 25,
+        speed: 4,
         img: img,
-        onTheRun: false
+        onTheRun: false,
+        // Check to see if keys are pressed, we can use this to check which direction the sprite is moving
+        // and animate characters as a strech goal down the road
+        pressingDown: false,
+        pressingUp: false,
+        pressingLeft: false,
+        pressingRight: false
     };
+
+
+
+
+
+
+
+
+
     // Allows self to update position and render itself on the canvas
     self.update = function () {
         self.updatePosition();
@@ -52,9 +78,6 @@ Player = function (name, id, x, y, img) {
         ctx.save();
         var x = self.x;
         var y = self.y;
-
-        x += WIDTH / 2;
-        y += HEIGHT / 2;
 
         x -= self.width / 2;
         y -= self.height / 2;
@@ -104,43 +127,37 @@ Player = function (name, id, x, y, img) {
         // Passed rectangles into our test collision function and retuns true or false
         return testCollisionRectRect(rect1, rect2);
     };
-    // Returns the self object representing a new entity
+    
 
-    //////////// TAKEN FROM ACTOR CONSTRUCTOR ////////////
+    // TODO - Figure out what this is for...
+    // var super_update = self.update;
+    // self.update = function () {
+    //     super_update();
+    //     if (
+    //         self.pressingRight ||
+    //         self.pressingLeft ||
+    //         self.pressingDown ||
+    //         self.pressingUp
+    //     )
+    //         self.spriteAnimCounter += 0.2;
+    // };
 
-    // All removed as it's placed somewhere else
-
-    //////////// TAKEN FROM PLAYER CONSTRUCTOR ////////////
-
-    // Not sure exactly what this does but appears to ramp up speed as user moves instead of starting off at full speed
-    // Looks like it smooths out the acceleration
-    var super_update = self.update;
-    self.update = function () {
-        super_update();
-        if (
-            self.pressingRight ||
-            self.pressingLeft ||
-            self.pressingDown ||
-            self.pressingUp
-        )
-            self.spriteAnimCounter += 0.2;
-    };
+    self.switchChaseState = function () {
+        self.onTheRun = -self.onTheRun;
+        if (self.onTheRun) {
+            self.speed = fastSpeed;
+        } else {
+            self.speed = slowSpeed;
+        }
+    }
 
     // Updates player position based on keypress W, A, S, D
     self.updatePosition = function () {
         // Saves old location for collision logic
         var oldX = self.x;
         var oldY = self.y;
-        // Sets speed to 4 for now
-        var speed = 4;
 
-        // Speed can change depending on if player is running or not
-        // For example: It's dark and humans are running, humans speed = 6, zombie speed = 4
-        if (self.onTheRun) {
-            speed = 6;
-        } else {
-            speed = 4;
-        }
+        var speed = self.speed;
 
         // Movement logic
         if (self.pressingRight) self.x += speed;
@@ -164,6 +181,21 @@ Player = function (name, id, x, y, img) {
         }
     };
 
+    // TODO - Connect with socket...
+//     socket.on('keyPress',function(data){
+//         if(data.inputId === 'left')
+//             player.pressingLeft = data.state;
+//         else if(data.inputId === 'right')
+//             player.pressingRight = data.state;
+//         else if(data.inputId === 'up')
+//             player.pressingUp = data.state;
+//         else if(data.inputId === 'down')
+//             player.pressingDown = data.state;
+//    });
+
+
+    
+
     // Player death function
     self.onDeath = function () {
         // Lists the time that player survived, we can re-work this to our score function
@@ -171,85 +203,58 @@ Player = function (name, id, x, y, img) {
         console.log("You lost! You survived for " + timeSurvived + " ms.");
         startNewGame();
     };
-    // Check to see if keys are pressed, we can use this to check which direction the sprite is moving
-    // and animate characters as a strech goal down the road
-    self.pressingDown = false;
-    self.pressingUp = false;
-    self.pressingLeft = false;
-    self.pressingRight = false;
 
     // Returns a Player
     return self;
 };
 
-//////////////// OLD PLAYER LOGIC BELOW THIS LINE - WORKS ON SINGLE PLAYER //////////////
-// var player = {
-//     x: 50,
-//     y: 40,
-//     width: 15,
-//     height: 25,
-//     speed: 4,
-//     img: Img.player,
-//     //
-//     pressingDown: false,
-//     pressingUp: false,
-//     pressingLeft: false,
-//     pressingRight: false
-// };
 
-var player = Player("Paul", "1", 40, 30, Img.player);
-// Old draw player function
-drawPlayer = function (char) {
-    ctx.save();
-    var x = char.x - char.width / 2;
-    var y = char.y - char.height / 2;
-    ctx.drawImage(char.img, x, y);
-    ctx.restore();
-};
+
+var P1 = Player("PAUL","PAUL-ID",50,50,Img.player);
+var P2 = Player("JASHAN","JASHAN-ID",40,40,Img.enemy);
+
+
+
+
 // Old keydown logic
 document.onkeydown = function (event) {
     if (event.keyCode === 68)
         //d
-        player.pressingRight = true;
+        {P1.pressingRight = true;
+        P2.pressingRight = true;}
     else if (event.keyCode === 83)
         //s
-        player.pressingDown = true;
+        {P1.pressingDown = true;
+        P2.pressingDown = true;}
     else if (event.keyCode === 65)
         //a
-        player.pressingLeft = true;
+        {P1.pressingLeft = true;
+        P2.pressingLeft = true;}
     else if (event.keyCode === 87)
         // w
-        player.pressingUp = true;
+        {P1.pressingUp = true;
+        P2.pressingUp = true;}
 };
 // Old key up logic
 document.onkeyup = function (event) {
     if (event.keyCode === 68)
         //d
-        player.pressingRight = false;
+        {P1.pressingRight = false;
+        P2.pressingRight = false;}
     else if (event.keyCode === 83)
         //s
-        player.pressingDown = false;
+        {P1.pressingDown = false;
+        P2.pressingDown = false;}
     else if (event.keyCode === 65)
         //a
-        player.pressingLeft = false;
+        {P1.pressingLeft = false;
+        P2.pressingLeft = false;}
     else if (event.keyCode === 87)
         // w
-        player.pressingUp = false;
+        {P1.pressingUp = false;
+        P2.pressingUp = false;}
 };
-// Old update player position logic
-updatePlayerPosition = function () {
-    if (player.pressingRight) player.x += player.speed;
-    if (player.pressingLeft) player.x -= player.speed;
-    if (player.pressingDown) player.y += player.speed;
-    if (player.pressingUp) player.y -= player.speed;
 
-    // Old isPositionWall logic
-    if (player.x < player.width / 2) player.x = player.width / 2;
-    if (player.x > WIDTH - player.width / 2) player.x = WIDTH - player.width / 2;
-    if (player.y < player.height / 2) player.y = player.height / 2;
-    if (player.y > HEIGHT - player.height / 2)
-        player.y = HEIGHT - player.height / 2;
-};
 // Update function
 update = function () {
     // Clears canvas
@@ -257,29 +262,11 @@ update = function () {
     // Draws the map
     Maps.current.draw();
     // Get a update of players position this frame
-    // player.update();
-    updatePlayerPosition();
+    P1.update();
+    P2.update();
+    // updatePlayerPosition();
     // Draw player based on updated position
-    drawPlayer(player);
-};
-
-// Reference for drawing images:
-// ctx.drawImage(image, cropStartX, cropStartY, cropWidth, cropHeight, drawX, drawY, drawWidth, drawHeight);
-// Old draw map function
-drawMap = function () {
-    ctx.save();
-    ctx.drawImage(
-        Img.map,
-        0,
-        0,
-        Img.map.width,
-        Img.map.height,
-        0,
-        0,
-        WIDTH,
-        HEIGHT
-    );
-    ctx.restore();
+    // drawPlayer(player);
 };
 
 ////////////////// Advanced map constructor (currently used) //////////////
@@ -304,8 +291,8 @@ Maps = function (id, imgSrc, grid) {
 
     // Renders map onto canvas
     self.draw = function () {
-        var x = WIDTH / 2 - player.x;
-        var y = HEIGHT / 2 - player.y;
+        // var x = WIDTH / 2 - player.x;
+        // var y = HEIGHT / 2 - player.y;
         ctx.drawImage(
             self.image,
             0,

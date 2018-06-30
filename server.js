@@ -7,7 +7,10 @@ app.get('/', function (req, res) {
     res.sendFile(__dirname + '/views/index.html');
 });
 
-app.use('/client', express.static(__dirname + '/public/'));
+app.use('/public', express.static(__dirname + '/public'));
+
+// TODO - Don't give models folder to user!!! Process.env...
+app.use('/models', express.static(__dirname + '/models'));
 
 serv.listen(PORT);
 console.log(`server listening on port ${PORT}`);
