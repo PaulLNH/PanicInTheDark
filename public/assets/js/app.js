@@ -8,6 +8,12 @@ var signDivSignIn = document.getElementById('signDiv-signIn');
 var signDivSignUp = document.getElementById('signDiv-signUp');
 var signDivPassword = document.getElementById('signDiv-password');
 
+var Img = {};
+Img.player = new Image();
+Img.player.src = '../public/assets/img/Player1.png';
+Img.map = new Image();
+Img.map.src = '../public/assets/img/hospital.png';
+
 signDivSignIn.onclick = function () {
     socket.emit('signIn', {
         username: signDivUsername.value,
@@ -44,11 +50,15 @@ ctx.font = '30px Arial';
 
 socket.on('newPositions', function (data) {
     ctx.clearRect(0, 0, 500, 500);
-    for (var i = 0; i < data.player.length; i++)
-        ctx.fillText(data.player[i].number, data.player[i].x, data.player[i].y);
+    ctx.drawImage(Img.map, 0, 0);
+    for (var i = 0; i < data.player.length; i++) {
+        ctx.drawImage(Img.player, data.player[i].x, data.player[i].y);
+        // ctx.fillText(data.player[i].number, data.player[i].x, data.player[i].y);
+    }
 
-    for (var i = 0; i < data.bullet.length; i++)
+    for (var i = 0; i < data.bullet.length; i++) {
         ctx.fillRect(data.bullet[i].x - 5, data.bullet[i].y - 5, 10, 10);
+    }
 });
 
 socket.on('addToChat', function (data) {

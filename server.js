@@ -117,7 +117,7 @@ var Player = function (id) {
     self.pressingDown = false;
     self.pressingAttack = false;
     self.mouseAngle = 0;
-    self.maxSpd = 10;
+    self.maxSpd = 4;
 
     var super_update = self.update;
     self.update = function () {

@@ -1,26 +1,56 @@
-<div id="signDiv">
-    Username:
-    <input id="signDiv-username" type="text"></input>
-    <br> Password:
-    <input id="signDiv-password" type="password"></input>
-    <button id="signDiv-signIn">Sign In</button>
-    <button id="signDiv-signUp">Sign Up</button>
-</div>
+<!DOCTYPE html>
+<html>
 
-<div id="gameDiv" style="display:none;">
-    <canvas id="ctx" width="500" height="500" style="border:1px solid #000000;"></canvas>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Panic In The Dark - Will You Survive The Human Race?</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script> -->
+    <!-- Bootstrap 4.1 -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4"
+        crossorigin="anonymous">
+    <!-- App specific style sheet -->
+    <link rel="stylesheet" type="text/css" media="screen" href="../public/assets/css/style.css" />
 
-    <div id="chat-text" style="width:500px;height:100px;overflow-y:scroll">
-        <div>Hello!</div>
+</head>
+
+<body>
+    <div class="wrapper">
+        <div class="row">
+            <div class="col-12 text-center">
+                <div id="signDiv">
+                    Username:
+                    <input id="signDiv-username" type="text"></input>
+                    <br> Password:
+                    <input id="signDiv-password" type="password"></input>
+                    <button id="signDiv-signIn">Sign In</button>
+                    <button id="signDiv-signUp">Sign Up</button>
+                </div>
+
+                <div id="gameDiv" style="display:none;" class="text-center">
+                    <canvas id="ctx" width="640" height="480" style="border:1px solid #000000;">
+                        <p>Your browser does not support HTML5 :(</p>
+                    </canvas>
+                    <!-- <canvas id="ctx" width="640" height="480" style="border:1px solid #000000;"></canvas> -->
+
+                    <div id="chat-text" style="width:500px;height:100px;overflow-y:scroll">
+                        <div>Hello!</div>
+                    </div>
+
+                    <form id="chat-form">
+                        <input id="chat-input" type="text" style="width:500px"></input>
+                    </form>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <form id="chat-form">
-        <input id="chat-input" type="text" style="width:500px"></input>
-    </form>
-</div>
+    <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+    <script src="./public/assets/js/app.js"></script>
+    <script>
+        console.log(`File loaded: ../public/index.html`);
+    </script>
+</body>
 
-<script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
-<script src="./public/assets/js/app.js"></script>
-<script>
-    console.log(`File loaded: ../public/index.html`);
-</script>
+</html>
