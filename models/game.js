@@ -1,10 +1,4 @@
-var gamePlay = function () {
-    var test = "potato";
-    console.log(test);
-    return;
-
-}
-
+console.log(`File loaded: ../models/game.js`);
 // var ctx = document.getElementById("ctx").getContext("2d");
 // // ctx.width = 800;
 // // ctx.height = 600;
@@ -21,18 +15,18 @@ var timerId = 0;
 var frames = 30;
 
 // Loads assets into memory
-var Img = {
-    player: {
-        width: 15,
-        height: 25,
-        src: '/../public/assets/img/Player1.png'
-    },
-    map: {
-        width: 640,
-        height: 480,
-        src: "/../public/assets/img/hospital.png"
-    }
-};
+// var Img = {
+//     player: {
+//         width: 15,
+//         height: 25,
+//         src: '/../public/assets/img/Player1.png'
+//     },
+//     map: {
+//         width: 640,
+//         height: 480,
+//         src: "/../public/assets/img/hospital.png"
+//     }
+// };
 // Img.player = new Image();
 // Img.player.src = '/../public/assets/img/Player1.png';
 // Img.enemy = new Image();
@@ -52,7 +46,6 @@ testCollisionRectRect = function (rect1, rect2) {
 
 //////// CUSTOM PLAYER CONSTRUCTOR ///////////////
 Player = function (name, id, x, y) {
-
     // ToDo Make these speeds global
     var fastSpeed = 6;
     var slowSpeed = 4;
@@ -138,7 +131,6 @@ Player = function (name, id, x, y) {
         return testCollisionRectRect(rect1, rect2);
     };
 
-
     // TODO - Figure out what this is for...
     // var super_update = self.update;
     // self.update = function () {
@@ -159,7 +151,7 @@ Player = function (name, id, x, y) {
         } else {
             self.speed = slowSpeed;
         }
-    }
+    };
 
     // Updates player position based on keypress W, A, S, D
     self.updatePosition = function () {
@@ -193,19 +185,13 @@ Player = function (name, id, x, y) {
 
     self.movement = function () {
         // TODO - Connect with socket...
-        socket.on('keyPress', function (data) {
-            if (data.inputId === 'left')
-                player.pressingLeft = data.state;
-            else if (data.inputId === 'right')
-                player.pressingRight = data.state;
-            else if (data.inputId === 'up')
-                player.pressingUp = data.state;
-            else if (data.inputId === 'down')
-                player.pressingDown = data.state;
+        socket.on("keyPress", function (data) {
+            if (data.inputId === "left") player.pressingLeft = data.state;
+            else if (data.inputId === "right") player.pressingRight = data.state;
+            else if (data.inputId === "up") player.pressingUp = data.state;
+            else if (data.inputId === "down") player.pressingDown = data.state;
         });
-    }
-
-
+    };
 
     // Player death function
     self.onDeath = function () {
@@ -219,13 +205,8 @@ Player = function (name, id, x, y) {
     return self;
 };
 
-
-
 // var P1 = Player("PAUL", "PAUL-ID", 50, 50, Img.player);
 // var P2 = Player("JASHAN", "JASHAN-ID", 40, 40, Img.enemy);
-
-
-
 
 // Old keydown logic
 // document.onkeydown = function (event) {
@@ -1601,7 +1582,6 @@ Maps.current = Maps("hospital", Img.map.src, array);
 // setInterval(update, 40);
 timerId = setInterval(update, 1000 / frames);
 
-
 module.exports = {
     gamePlay: gamePlay
-}
+};
