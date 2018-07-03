@@ -1,0 +1,1 @@
+console.log(`File loaded: ../public/assets/js/test.js`);
