@@ -1,17 +1,29 @@
 console.log(`File loaded: ../server.js`);
-const test = require('./models/test.js');
+// const test = require('./models/test.js');
 
-var Player = test.Player;
-var Bullet = test.Bullet;
-var SOCKET_LIST = test.SOCKET_LIST;
-var Entity = test.Entity;
-var DEBUG = test.DEBUG;
-var USERS = test.USERS;
-var isValidPassword = test.isValidPassword;
-var isUsernameTaken = test.isUsernameTaken;
-var addUser = test.addUser;
+// var Player = test.Player;
+// var Bullet = test.Bullet;
+// var SOCKET_LIST = test.SOCKET_LIST;
+// var Entity = test.Entity;
+// var DEBUG = test.DEBUG;
+// var USERS = test.USERS;
+// var isValidPassword = test.isValidPassword;
+// var isUsernameTaken = test.isUsernameTaken;
+// var addUser = test.addUser;
 
 
+const game = require('./models/game.js');
+
+var gamePlay = game.gamePlay;
+var timerId = game.timerId;
+var Maps = game.Maps;
+var testCollisionRectRect = game.testCollisionRectRect;
+var update = game.update;
+var Player = game.Player;
+var TILE_SIZE = game.TILE_SIZE;
+var HEIGHT = game.HEIGHT;
+var WIDTH = game.WIDTH;
+var frames = game.frames;
 
 
 
