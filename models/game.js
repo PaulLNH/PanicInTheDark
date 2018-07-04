@@ -1,7 +1,8 @@
-var ctx = document.getElementById("ctx").getContext("2d");
-// ctx.width = 800;
-// ctx.height = 600;
-ctx.font = "30px Arial";
+console.log(`File loaded: ../models/game.js`);
+// var ctx = document.getElementById("ctx").getContext("2d");
+// // ctx.width = 800;
+// // ctx.height = 600;
+// ctx.font = "30px Arial";
 
 // Sets tile size (our sprites are default of 16px, we display 32px if we zoom into the map)
 // var TILE_SIZE = 32;  // Probably not needed
@@ -14,13 +15,24 @@ var timerId = 0;
 var frames = 30;
 
 // Loads assets into memory
-var Img = {};
-Img.player = new Image();
-Img.player.src = "../public/assets/img/Player1.png";
-Img.enemy = new Image();
-Img.enemy.src = "../public/assets/img/Zombie1.png";
-Img.map = new Image();
-Img.map.src = "../public/assets/img/hospital.png";
+// var Img = {
+//     player: {
+//         width: 15,
+//         height: 25,
+//         src: '/../public/assets/img/Player1.png'
+//     },
+//     map: {
+//         width: 640,
+//         height: 480,
+//         src: "/../public/assets/img/hospital.png"
+//     }
+// };
+// Img.player = new Image();
+// Img.player.src = '/../public/assets/img/Player1.png';
+// Img.enemy = new Image();
+// Img.enemy.src = "/../public/assets/img/Zombie1.png";
+// Img.map = new Image();
+// Img.map.src = "/../public/assets/img/hospital.png";
 
 // Function to see if two rectangles are colliding, used in the entity constructor
 testCollisionRectRect = function (rect1, rect2) {
@@ -33,8 +45,7 @@ testCollisionRectRect = function (rect1, rect2) {
 };
 
 //////// CUSTOM PLAYER CONSTRUCTOR ///////////////
-Player = function (name, id, x, y, img) {
-
+Player = function (name, id, x, y) {
     // ToDo Make these speeds global
     var fastSpeed = 6;
     var slowSpeed = 4;
@@ -49,7 +60,7 @@ Player = function (name, id, x, y, img) {
         width: 15,
         height: 25,
         speed: 4,
-        img: img,
+        img: Img.player,
         onTheRun: false,
         // Check to see if keys are pressed, we can use this to check which direction the sprite is moving
         // and animate characters as a strech goal down the road
@@ -58,14 +69,6 @@ Player = function (name, id, x, y, img) {
         pressingLeft: false,
         pressingRight: false
     };
-
-
-
-
-
-
-
-
 
     // Allows self to update position and render itself on the canvas
     self.update = function () {
@@ -127,7 +130,6 @@ Player = function (name, id, x, y, img) {
         // Passed rectangles into our test collision function and retuns true or false
         return testCollisionRectRect(rect1, rect2);
     };
-    
 
     // TODO - Figure out what this is for...
     // var super_update = self.update;
@@ -149,7 +151,7 @@ Player = function (name, id, x, y, img) {
         } else {
             self.speed = slowSpeed;
         }
-    }
+    };
 
     // Updates player position based on keypress W, A, S, D
     self.updatePosition = function () {
@@ -181,20 +183,15 @@ Player = function (name, id, x, y, img) {
         }
     };
 
-    // TODO - Connect with socket...
-//     socket.on('keyPress',function(data){
-//         if(data.inputId === 'left')
-//             player.pressingLeft = data.state;
-//         else if(data.inputId === 'right')
-//             player.pressingRight = data.state;
-//         else if(data.inputId === 'up')
-//             player.pressingUp = data.state;
-//         else if(data.inputId === 'down')
-//             player.pressingDown = data.state;
-//    });
-
-
-    
+    self.movement = function () {
+        // TODO - Connect with socket...
+        socket.on("keyPress", function (data) {
+            if (data.inputId === "left") player.pressingLeft = data.state;
+            else if (data.inputId === "right") player.pressingRight = data.state;
+            else if (data.inputId === "up") player.pressingUp = data.state;
+            else if (data.inputId === "down") player.pressingDown = data.state;
+        });
+    };
 
     // Player death function
     self.onDeath = function () {
@@ -208,52 +205,58 @@ Player = function (name, id, x, y, img) {
     return self;
 };
 
-
-
-var P1 = Player("PAUL","PAUL-ID",50,50,Img.player);
-var P2 = Player("JASHAN","JASHAN-ID",40,40,Img.enemy);
-
-
-
+// var P1 = Player("PAUL", "PAUL-ID", 50, 50, Img.player);
+// var P2 = Player("JASHAN", "JASHAN-ID", 40, 40, Img.enemy);
 
 // Old keydown logic
-document.onkeydown = function (event) {
-    if (event.keyCode === 68)
-        //d
-        {P1.pressingRight = true;
-        P2.pressingRight = true;}
-    else if (event.keyCode === 83)
-        //s
-        {P1.pressingDown = true;
-        P2.pressingDown = true;}
-    else if (event.keyCode === 65)
-        //a
-        {P1.pressingLeft = true;
-        P2.pressingLeft = true;}
-    else if (event.keyCode === 87)
-        // w
-        {P1.pressingUp = true;
-        P2.pressingUp = true;}
-};
+// document.onkeydown = function (event) {
+//     if (event.keyCode === 68)
+//     //d
+//     {
+//         P1.pressingRight = true;
+//         P2.pressingRight = true;
+//     } else if (event.keyCode === 83)
+//     //s
+//     {
+//         P1.pressingDown = true;
+//         P2.pressingDown = true;
+//     } else if (event.keyCode === 65)
+//     //a
+//     {
+//         P1.pressingLeft = true;
+//         P2.pressingLeft = true;
+//     } else if (event.keyCode === 87)
+//     // w
+//     {
+//         P1.pressingUp = true;
+//         P2.pressingUp = true;
+//     }
+// };
+
 // Old key up logic
-document.onkeyup = function (event) {
-    if (event.keyCode === 68)
-        //d
-        {P1.pressingRight = false;
-        P2.pressingRight = false;}
-    else if (event.keyCode === 83)
-        //s
-        {P1.pressingDown = false;
-        P2.pressingDown = false;}
-    else if (event.keyCode === 65)
-        //a
-        {P1.pressingLeft = false;
-        P2.pressingLeft = false;}
-    else if (event.keyCode === 87)
-        // w
-        {P1.pressingUp = false;
-        P2.pressingUp = false;}
-};
+// document.onkeyup = function (event) {
+//     if (event.keyCode === 68)
+//     //d
+//     {
+//         P1.pressingRight = false;
+//         P2.pressingRight = false;
+//     } else if (event.keyCode === 83)
+//     //s
+//     {
+//         P1.pressingDown = false;
+//         P2.pressingDown = false;
+//     } else if (event.keyCode === 65)
+//     //a
+//     {
+//         P1.pressingLeft = false;
+//         P2.pressingLeft = false;
+//     } else if (event.keyCode === 87)
+//     // w
+//     {
+//         P1.pressingUp = false;
+//         P2.pressingUp = false;
+//     }
+// };
 
 // Update function
 update = function () {
@@ -273,7 +276,7 @@ update = function () {
 Maps = function (id, imgSrc, grid) {
     var self = {
         id: id,
-        image: new Image(),
+        image: Img.map,
         width: grid[0].length * TILE_SIZE,
         height: grid.length * TILE_SIZE,
         grid: grid
@@ -1578,3 +1581,7 @@ Maps.current = Maps("hospital", Img.map.src, array);
 // Game loop at
 // setInterval(update, 40);
 timerId = setInterval(update, 1000 / frames);
+
+module.exports = {
+    gamePlay: gamePlay
+};
