@@ -96,7 +96,7 @@ setInterval(function () {
         var socket = SOCKET_LIST[i];
         socket.emit('newPositions', pack);
     }
-}, 1000 / 25);
+}, 10000 / 25);
 
 // // Break code here
 // var SOCKET_LIST = {};

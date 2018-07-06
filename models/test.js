@@ -15,13 +15,16 @@ var Entity = function () {
         spdY: 0,
         id: "",
     }
+
+   
     self.update = function () {
+        console.log("In Entity self.update")
         self.updatePosition();
     }
     self.updatePosition = function () {
         var oldX = self.x;
         var oldY = self.y;
-        if (isPositionWall(self)) {
+        if (self.isPositionWall()) {
             // If it is a wall sets the x and y back to the saved x and y from above
             self.x = oldX;
             self.y = oldY;
@@ -33,6 +36,26 @@ var Entity = function () {
     self.getDistance = function (pt) {
         return Math.sqrt(Math.pow(self.x - pt.x, 2) + Math.pow(self.y - pt.y, 2));
     }
+
+    /// Jashan Note 7/6/18 - Moved "isPositionWall" into the entity constructor - Attempting to re-scope "self" to get it to function correctly
+    self.isPositionWall = function () {
+        var gridX = Math.floor(self.x / TILE_SIZE);
+        var gridY = Math.floor(self.y / TILE_SIZE);
+
+        console.log(gridX+", "+gridY);
+
+        // if (gridX < 0 || gridX >= grid[0].length) return true;
+        // if (gridY < 0 || gridY >= grid.length) return true;
+        // // return self.grid[gridY][gridX];
+
+        var solid = grid[gridY][gridX];
+        console.log(solid);
+
+        if (solid == 1) {return true}
+        else if (solid == 0) {return false}
+
+        // return false;
+    };
     return self;
 }
 
@@ -192,14 +215,15 @@ Player.testCollision = function (entity2) {
     return testCollisionRectRect(rect1, rect2);
 };
 
-/// TODO: This needs to be tewaked from game.js to work independently with the Entity updatePosition(). The only thing that needs to be looked at here would be the 'self' portion of this function now that it's broken out.
-isPositionWall = function (pt) {
-    var gridX = Math.floor(pt.x / TILE_SIZE);
-    var gridY = Math.floor(pt.y / TILE_SIZE);
-    if (gridX < 0 || gridX >= self.grid[0].length) return true;
-    if (gridY < 0 || gridY >= self.grid.length) return true;
-    return self.grid[gridY][gridX];
-};
+// /// TODO: This needs to be tewaked from game.js to work independently with the Entity updatePosition(). The only thing that needs to be looked at here would be the 'self' portion of this function now that it's broken out.
+// isPositionWall = function (pt) {
+//     var gridX = Math.floor(pt.x / TILE_SIZE);
+//     var gridY = Math.floor(pt.y / TILE_SIZE);
+//     if (gridX < 0 || gridX >= grid[0].length) return true;
+//     if (gridY < 0 || gridY >= grid.length) return true;
+//     // return self.grid[gridY][gridX];
+//     return false;
+// };
 
 
 
