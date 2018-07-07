@@ -7,20 +7,23 @@ var WIDTH = 640;
 // Break code here
 var SOCKET_LIST = {};
 
-var Entity = function () {
+var Player = function (id, username) {
     var self = {
+        id: id,
+        username: username,
+        number: "" + Math.floor(10 * Math.random()),
+        maxSpd: 4,
         x: 250,
         y: 250,
         spdX: 0,
         spdY: 0,
-        id: "",
     }
 
-   
-    self.update = function () {
-        console.log("In Entity self.update")
-        self.updatePosition();
-    }
+    self.pressingRight = false;
+    self.pressingLeft = false;
+    self.pressingUp = false;
+    self.pressingDown = false;
+
     self.updatePosition = function () {
         var oldX = self.x;
         var oldY = self.y;
@@ -33,16 +36,16 @@ var Entity = function () {
             self.y += self.spdY;
         }
     }
-    self.getDistance = function (pt) {
-        return Math.sqrt(Math.pow(self.x - pt.x, 2) + Math.pow(self.y - pt.y, 2));
-    }
 
-    /// Jashan Note 7/6/18 - Moved "isPositionWall" into the entity constructor - Attempting to re-scope "self" to get it to function correctly
+    // self.getDistance = function (pt) {
+    //     return Math.sqrt(Math.pow(self.x - pt.x, 2) + Math.pow(self.y - pt.y, 2));
+    // }
+
     self.isPositionWall = function () {
         var gridX = Math.floor(self.x / TILE_SIZE);
         var gridY = Math.floor(self.y / TILE_SIZE);
 
-        console.log(gridX+", "+gridY);
+        console.log(gridX + ", " + gridY);
 
         // if (gridX < 0 || gridX >= grid[0].length) return true;
         // if (gridY < 0 || gridY >= grid.length) return true;
@@ -51,30 +54,14 @@ var Entity = function () {
         var solid = grid[gridY][gridX];
         console.log(solid);
 
-        if (solid == 1) {return true}
-        else if (solid == 0) {return false}
+        if (solid == 1) {
+            return true
+        } else if (solid == 0) {
+            return false
+        }
 
         // return false;
     };
-    return self;
-}
-
-var Player = function (id, username) {
-    var self = Entity();
-    self.id = id;
-    self.username = username;
-    self.number = "" + Math.floor(10 * Math.random());
-    self.pressingRight = false;
-    self.pressingLeft = false;
-    self.pressingUp = false;
-    self.pressingDown = false;
-    self.maxSpd = 4;
-
-    var super_update = self.update;
-    self.update = function () {
-        self.updateSpd();
-        super_update();
-    }
 
     self.updateSpd = function () {
         if (self.pressingRight)
@@ -92,11 +79,17 @@ var Player = function (id, username) {
             self.spdY = 0;
     }
     Player.list[id] = self;
+
+    self.update = function () {
+        // console.log("In Player self.update");
+        self.updateSpd();
+        self.updatePosition();
+    }
     return self;
 }
 Player.list = {};
 Player.onConnect = function (socket) {
-    console.log(`Socket from connection: ${Player.list}`);
+    console.log(`Socket from connection: ${socket.id}`);
     var player = Player(socket.id, socket.username);
     socket.on('keyPress', function (data) {
         if (data.inputId === 'left')
@@ -129,33 +122,6 @@ Player.update = function () {
     }
     return pack;
 }
-
-
-// var Bullet = function (parent, angle) {
-//     var self = Entity();
-//     self.id = Math.random();
-//     self.spdX = Math.cos(angle / 180 * Math.PI) * 10;
-//     self.spdY = Math.sin(angle / 180 * Math.PI) * 10;
-//     self.parent = parent;
-//     self.timer = 0;
-//     self.toRemove = false;
-//     var super_update = self.update;
-//     self.update = function () {
-//         if (self.timer++ > 100)
-//             self.toRemove = true;
-//         super_update();
-
-//         for (var i in Player.list) {
-//             var p = Player.list[i];
-//             if (self.getDistance(p) < 32 && self.parent !== p.id) {
-//                 //handle collision. ex: hp--;
-//                 self.toRemove = true;
-//             }
-//         }
-//     }
-//     Bullet.list[self.id] = self;
-//     return self;
-// }
 
 var DEBUG = true;
 
@@ -215,23 +181,20 @@ Player.testCollision = function (entity2) {
     return testCollisionRectRect(rect1, rect2);
 };
 
-// /// TODO: This needs to be tewaked from game.js to work independently with the Entity updatePosition(). The only thing that needs to be looked at here would be the 'self' portion of this function now that it's broken out.
-// isPositionWall = function (pt) {
-//     var gridX = Math.floor(pt.x / TILE_SIZE);
-//     var gridY = Math.floor(pt.y / TILE_SIZE);
-//     if (gridX < 0 || gridX >= grid[0].length) return true;
-//     if (gridY < 0 || gridY >= grid.length) return true;
-//     // return self.grid[gridY][gridX];
-//     return false;
-// };
+/// TODO: This needs to be tewaked from game.js to work independently with the Entity updatePosition(). The only thing that needs to be looked at here would be the 'self' portion of this function now that it's broken out.
+isPositionWall = function (pt) {
+    var gridX = Math.floor(pt.x / TILE_SIZE);
+    var gridY = Math.floor(pt.y / TILE_SIZE);
+    if (gridX < 0 || gridX >= self.grid[0].length) return true;
+    if (gridY < 0 || gridY >= self.grid.length) return true;
+    return self.grid[gridY][gridX];
+};
 
 
 
 module.exports = {
     Player: Player,
-    // Bullet: Bullet,
     SOCKET_LIST: SOCKET_LIST,
-    Entity: Entity,
     DEBUG: DEBUG,
     USERS: USERS,
     isValidPassword: isValidPassword,
