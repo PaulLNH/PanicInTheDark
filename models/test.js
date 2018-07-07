@@ -1270,15 +1270,16 @@ const HEIGHT = 480;
 
 var Player = function (id) {
     var self = {
+        id: id,
+        number: "" + Math.floor(10 * Math.random()),
+        maxSpd: 4,
         x: 250,
         y: 225,
         spdX: 0,
         spdY: 0,
-        id: id,
         width: 14,
         height: 25,
-        maxSpd: 4,
-        number: "" + Math.floor(10 * Math.random())
+        maxSpd: 4
     };
 
     self.update = function () {
@@ -1355,10 +1356,13 @@ Player.update = function () {
     for (var i in Player.list) {
         var player = Player.list[i];
         player.update();
+        // if (self.getDistance(player) < 32 && self.parent !== player.id) {
+        //     console.log(`${self.name} has tagged ${player.name}`)
+        // }
         pack.push({
             x: player.x,
             y: player.y,
-            number: player.number
+            username: player.username
         });
     }
     return pack;
@@ -1399,6 +1403,39 @@ var addUser = function (data, cb) {
         cb();
     }, 10);
 };
+
+//////////// PLAYER COLISSION /////////////
+
+testCollisionRectRect = function (rect1, rect2) {
+    return (
+        rect1.x <= rect2.x + rect2.width &&
+        rect2.x <= rect1.x + rect1.width &&
+        rect1.y <= rect2.y + rect2.height &&
+        rect2.y <= rect1.y + rect1.height
+    );
+};
+
+/// ADDS the testCollision function to the Player constructor
+Player.testCollision = function (entity2) {
+    // Self
+    var rect1 = {
+        x: self.x - self.width / 2,
+        y: self.y - self.height / 2,
+        width: self.width,
+        height: self.height
+    };
+    // Passed entity
+    var rect2 = {
+        x: entity2.x - entity2.width / 2,
+        y: entity2.y - entity2.height / 2,
+        width: entity2.width,
+        height: entity2.height
+    };
+    // Passed rectangles into our test collision function and retuns true or false
+    return testCollisionRectRect(rect1, rect2);
+};
+
+
 
 module.exports = {
     Player: Player,
