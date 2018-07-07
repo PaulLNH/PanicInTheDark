@@ -53,11 +53,8 @@ socket.on('newPositions', function (data) {
     ctx.drawImage(Img.map, 0, 0);
     for (var i = 0; i < data.player.length; i++) {
         ctx.drawImage(Img.player, data.player[i].x, data.player[i].y);
+        // Draws username above players head
         // ctx.fillText(data.player[i].number, data.player[i].x, data.player[i].y);
-    }
-
-    for (var i = 0; i < data.bullet.length; i++) {
-        ctx.fillRect(data.bullet[i].x - 5, data.bullet[i].y - 5, 10, 10);
     }
 });
 

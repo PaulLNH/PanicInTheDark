@@ -6,7 +6,7 @@ var SOCKET_LIST = {};
 var Entity = function () {
     var self = {
         x: 250,
-        y: 250,
+        y: 225,
         spdX: 0,
         spdY: 0,
         id: "",
@@ -41,15 +41,15 @@ var Player = function (id) {
         self.updateSpd();
         super_update();
 
-        if (self.pressingAttack) {
-            self.shootBullet(self.mouseAngle);
-        }
+        // if (self.pressingAttack) {
+        //     self.shootBullet(self.mouseAngle);
+        // }
     }
-    self.shootBullet = function (angle) {
-        var b = Bullet(self.id, angle);
-        b.x = self.x;
-        b.y = self.y;
-    }
+    // self.shootBullet = function (angle) {
+    //     var b = Bullet(self.id, angle);
+    //     b.x = self.x;
+    //     b.y = self.y;
+    // }
 
 
     self.updateSpd = function () {
