@@ -18,18 +18,29 @@ Img.player.src = "../public/assets/img/Player1.png";
 Img.map = new Image();
 Img.map.src = "../public/assets/img/hospital.png";
 
-signDivSignIn.onclick = function () {
+
+signDivSignIn.addEventListener("click", function (event) {
+    event.preventDefault();
     socket.emit("signIn", {
         username: signDivUsername.value,
         password: signDivPassword.value
     });
-};
-signDivSignUp.onclick = function () {
+});
+
+signDivSignUp.addEventListener("click", function (event) {
+    event.preventDefault();
     socket.emit("signUp", {
         username: signDivUsername.value,
         password: signDivPassword.value
     });
-};
+});
+
+// signDivSignUp.onclick = function () {
+//     socket.emit("signUp", {
+//         username: signDivUsername.value,
+//         password: signDivPassword.value
+//     });
+// };
 socket.on("signInResponse", function (data) {
     if (data.success) {
         signDiv.style.display = "none";

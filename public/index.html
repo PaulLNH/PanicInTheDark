@@ -16,37 +16,69 @@
 </head>
 
 <body>
+    <!-- Login Modal -->
+
+    <!-- Game window -->
     <div class="wrapper">
         <div class="row">
-            <div class="col-12 text-center">
-                <div id="signDiv">
-                    Username:
+            <div class="col-12">
+
+                <div id="signDiv" class="col-lg-4 offset-lg-4">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label class="control-label col-sm-2" for="email">Username:</label>
+                            <div class="col-sm-10">
+                                <input class="form-control" id="signDiv-username" placeholder="Enter username">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="control-label col-sm-2" for="pwd">Password:</label>
+                            <div class="col-sm-10">
+                                <input type="password" class="form-control" id="signDiv-password" placeholder="Enter password">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-sm-offset-2 col-sm-10">
+                                <button type="submit" class="btn btn-default" id="signDiv-signIn">Submit</button>
+                                <button type="submit" class="btn btn-default" id="signDiv-signUp">Sign Up</button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <!-- Username:
                     <input id="signDiv-username" type="text"></input>
                     <br> Password:
                     <input id="signDiv-password" type="password"></input>
                     <br>
                     <button id="signDiv-signIn">Sign In</button>
-                    <button id="signDiv-signUp">Sign Up</button>
+                    <button id="signDiv-signUp">Sign Up</button> -->
                 </div>
 
-                <div id="gameDiv" style="display:none;" class="text-center">
+                <div id="gameDiv" style="display:none;" class="col-lg-8 offset-lg-2 text-left">
                     <canvas id="ctx" width="640" height="480" style="border:1px solid #000000;">
                         <p>Your browser does not support HTML5 :(</p>
                     </canvas>
                     <!-- <canvas id="ctx" width="640" height="480" style="border:1px solid #000000;"></canvas> -->
 
-                    <div id="chat-text" style="width:500px;height:100px;overflow-y:scroll">
-                        <div>Hello!</div>
+                    <div id="chat-text" style="width:640px;height:200px;overflow-y:scroll">
+                        <div>Welcome to Panic In The Dark. Chase other players when you have vision, run from players when it's
+                            dark!</div>
                     </div>
 
                     <form id="chat-form">
-                        <input id="chat-input" type="text" style="width:500px"></input>
+                        <input id="chat-input" type="text" style="width:640px" placeholder="Type here and press 'Enter' to chat."></input>
                     </form>
                 </div>
             </div>
         </div>
     </div>
 
+    <!-- <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
+        crossorigin="anonymous"></script> -->
     <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
     <script src="./public/assets/js/app.js"></script>
     <script>
