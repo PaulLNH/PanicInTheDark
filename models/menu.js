@@ -1,3 +1,4 @@
+console.log(`File loaded: ../models/menu.js`);
 // canvas
 var canvas = document.getElementById("ctx");
 var context = canvas.getContext("2d");

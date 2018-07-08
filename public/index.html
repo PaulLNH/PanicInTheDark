@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Panic In The Dark - Will You Survive The Human Race?</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script> -->
+    <!-- Google font (Special Elite - https://fonts.google.com/specimen/Special+Elite?selection.family=Special+Elite) -->
+    <link href="https://fonts.googleapis.com/css?family=Special+Elite" rel="stylesheet">
+    <!-- Bootstrap 4.1 -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4"
+        crossorigin="anonymous">
+    <!-- App specific style sheet -->
+    <link rel="stylesheet" type="text/css" media="screen" href="../public/assets/css/style.css" />
+
+</head>
+
+<body>
+    <!-- Login Modal -->
+
+    <!-- Game window -->
+    <div class="wrapper">
+        <div class="row">
+            <div id="signDiv" class="col-lg-4 offset-lg-4">
+                <img class="form-horizontal">
+                <h1>PANIC IN THE DARK</h1>
+                <div class="form-group">
+                    <label class="control-label col-sm-2" for="email">Username:</label>
+                    <div class="col-sm-10">
+                        <input class="form-control" id="signDiv-username" placeholder="Enter username">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-sm-2" for="pwd">Password:</label>
+                    <div class="col-sm-10">
+                        <input type="password" class="form-control" id="signDiv-password" placeholder="Enter password">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <button type="submit" class="btn btn-default" id="signDiv-signIn">Login</button>
+                        <button type="submit" class="btn btn-default" id="signDiv-signUp">Sign Up</button>
+                    </div>
+                </div>
+                </form>
+            </div>
+
+            <div id="gameDiv" style="display:none;">
+                <div id="contain">
+                    <canvas id="ctx" width="640" height="480" style="border:1px solid #6e0000;">
+                        <p>Your browser does not support HTML5 :(</p>
+                    </canvas>
+                    <canvas id="ctxv" width="640" height="480" style="border:1px solid #6e0000;"></canvas>
+                </div>
+                <!-- <div id="chatDiv"> -->
+                <div id="chat-text" style="width:640px;height:200px;overflow-y:scroll">
+                    <div style="font-weight:bold">Welcome to Panic In The Dark. Use W, A, S, D or the arrow keys to move. Chase other players when you
+                        have vision, run from players when it's dark!
+                    </div>
+                </div>
+
+                <form id="chat-form">
+                    <input id="chat-input" type="text" style="width:640px" placeholder="Type here and press 'Enter' to chat"></input>
+                </form>
+                <!-- </div> -->
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
+    <script src="./public/assets/js/app.js"></script>
+    <script>
+        console.log(`File loaded: ../public/index.html`);
+    </script>
+</body>
+
+</html>

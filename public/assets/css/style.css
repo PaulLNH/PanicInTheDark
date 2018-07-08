@@ -14,8 +14,49 @@ body {
     width: auto;
 } */
 
+#contain {
+    width: 640px;
+    height: 480px;
+    margin: 0 auto;
+    position: relative;
+}
+
+#ctx,
+#ctxv {
+    position: absolute;
+    top: 0;
+    left: 0;
+    /* z-index: 100; */
+}
+
 body {
     background-color: black;
     overflow-x: hidden;
-    overflow-y: hidden;
+    /* overflow-y: hidden; */
+}
+
+#chat-text {
+    background: gray;
+    padding: 5px;
+    margin: 0;
+}
+
+#gameDiv {
+    margin: 0 auto;
+    position: relative;
+    /* width: 640;
+    height: 720; */
+    padding: 10px 0;
+    display: block;
+}
+
+.control-label {
+    color: rgb(146, 0, 0);
+    font-weight: bold;
+}
+
+h1 {
+    color: rgb(146, 0, 0);
+    font-family: 'Special Elite', cursive;
+    font-weight: bold;
 }

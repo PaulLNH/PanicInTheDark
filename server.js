@@ -1,87 +1,92 @@
-var express = require('express');
-var app = express();
-var serv = require('http').Server(app);
-var PORT = 2000;
-var Game = require('./models/game.js');
+console.log(`File loaded: ../server.js`);
+const test = require("./models/test.js");
 
-Game.gamePlay();
+var Player = test.Player;
+var SOCKET_LIST = test.SOCKET_LIST;
+var DEBUG = test.DEBUG;
+var USERS = test.USERS;
+var isValidPassword = test.isValidPassword;
+var isUsernameTaken = test.isUsernameTaken;
+var addUser = test.addUser;
 
+var frames = 30;
 
-app.get('/', function (req, res) {
-    res.sendFile(__dirname + '/views/index.html');
+const express = require("express");
+const app = express();
+const serv = require("http").Server(app);
+const PORT = process.env.PORT || 8080;
+
+app.get("/", function(req, res) {
+  res.sendFile(__dirname + "/public/index.html");
 });
-
-app.use('/public', express.static(__dirname + '/public'));
-
-// app.use('/models', express.static(__dirname + '/models'));
+app.use("/public", express.static(__dirname + "/public"));
 
 serv.listen(PORT);
-console.log(`server listening on port ${PORT}`);
+console.log(`Server started. localhost:${PORT}`);
 
+var io = require("socket.io")(serv, {});
+io.sockets.on("connection", function(socket) {
+  // socket.id = Math.random();
+  SOCKET_LIST[socket.id] = socket;
 
-// Look into https://socket.io/get-started/chat/ for multiplayer if Firebase does not work out
-var io = require('socket.io')(serv, {});
-
-
-var SOCKET_LIST = {};
-var PLAYER_LIST = {};
-
-// var Player = function (id) {
-//     var self = {
-//         x: 250,
-//         y: 250,
-//         id: id,
-//         number: "" + Math.floor(10 * Math.random()),
-//         pressingRight: false,
-//         pressingLeft: false,
-//         pressingUp: false,
-//         pressingDown: false,
-//         maxSpd: 10,
-//     }
-//     self.updatePosition = function () {
-//         if (self.pressingRight)
-//             self.x += self.maxSpd;
-//         if (self.pressingLeft)
-//             self.x -= self.maxSpd;
-//         if (self.pressingUp)
-//             self.y -= self.maxSpd;
-//         if (self.pressingDown)
-//             self.y += self.maxSpd;
-//     }
-//     return self;
-// }
-
-io.on('connection', function (socket) {
-    console.log('a user connected');
-    socket.id = Math.random();
-    console.log(socket.id)
-    SOCKET_LIST[socket.id] = socket;
-
-    console.log(Game.gamePlay.test);
-
-    var player = Game.Player("Player1", socket.id, 50, 50);
-    PLAYER_LIST[socket.id] = player;
-
-    socket.on('disconnect', function () {
-        delete SOCKET_LIST[socket.id];
-        delete PLAYER_LIST[socket.id];
+  socket.on("signIn", function(data) {
+    isValidPassword(data, function(res) {
+      if (res) {
+        Player.onConnect(socket, data);
+        socket.emit("signInResponse", {
+          success: true
+        });
+      } else {
+        socket.emit("signInResponse", {
+          success: false
+        });
+      }
     });
-
-    player.movement();
-    // socket.on('keyPress', function (data) {
-    //     if (data.inputId === 'left')
-    //         player.pressingLeft = data.state;
-    //     else if (data.inputId === 'right')
-    //         player.pressingRight = data.state;
-    //     else if (data.inputId === 'up')
-    //         player.pressingUp = data.state;
-    //     else if (data.inputId === 'down')
-    //         player.pressingDown = data.state;
-    // });
-    // console.log(SOCKET_LIST);
-    console.log(PLAYER_LIST);
-    socket.on('disconnect', function () {
-        console.log('user disconnected');
-        console.log(socket.id);
+  });
+  socket.on("signUp", function(data) {
+    isUsernameTaken(data, function(res) {
+      if (res) {
+        socket.emit("signUpResponse", {
+          success: false
+        });
+      } else {
+        addUser(data, function() {
+          socket.emit("signUpResponse", {
+            success: true
+          });
+        });
+      }
     });
+  });
+
+  socket.on("disconnect", function() {
+    delete SOCKET_LIST[socket.id];
+    Player.onDisconnect(socket);
+  });
+  socket.on("sendMsgToServer", function(data, userID) {
+    var pack = {
+      player: Player.update()
+    };
+
+    for (var i in SOCKET_LIST) {
+      SOCKET_LIST[i].emit("addToChat", pack, data, userID);
+    }
+  });
+
+  socket.on("evalServer", function(data) {
+    if (!DEBUG) return;
+    var res = eval(data);
+    socket.emit("evalAnswer", res);
+  });
 });
+
+setInterval(function() {
+  var pack = {
+    player: Player.update()
+  };
+
+  for (var i in SOCKET_LIST) {
+    var socket = SOCKET_LIST[i];
+    socket.emit("newPositions", pack);
+  }
+}, 1000 / frames);
