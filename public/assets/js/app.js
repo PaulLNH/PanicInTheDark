@@ -92,25 +92,25 @@ chatForm.onsubmit = function (e) {
 };
 
 document.onkeydown = function (event) {
-    if (event.keyCode === 68)
+    if (event.keyCode === 68 || event.keyCode === 39)
         //d
         socket.emit("keyPress", {
             inputId: "right",
             state: true
         });
-    else if (event.keyCode === 83)
+    else if (event.keyCode === 83 || event.keyCode === 40)
         //s
         socket.emit("keyPress", {
             inputId: "down",
             state: true
         });
-    else if (event.keyCode === 65)
+    else if (event.keyCode === 65 || event.keyCode === 37)
         //a
         socket.emit("keyPress", {
             inputId: "left",
             state: true
         });
-    else if (event.keyCode === 87)
+    else if (event.keyCode === 87 || event.keyCode === 38)
         // w
         socket.emit("keyPress", {
             inputId: "up",
@@ -118,25 +118,25 @@ document.onkeydown = function (event) {
         });
 };
 document.onkeyup = function (event) {
-    if (event.keyCode === 68)
+    if (event.keyCode === 68 || event.keyCode === 39)
         //d
         socket.emit("keyPress", {
             inputId: "right",
             state: false
         });
-    else if (event.keyCode === 83)
+    else if (event.keyCode === 83 || event.keyCode === 40)
         //s
         socket.emit("keyPress", {
             inputId: "down",
             state: false
         });
-    else if (event.keyCode === 65)
+    else if (event.keyCode === 65 || event.keyCode === 37)
         //a
         socket.emit("keyPress", {
             inputId: "left",
             state: false
         });
-    else if (event.keyCode === 87)
+    else if (event.keyCode === 87 || event.keyCode === 38)
         // w
         socket.emit("keyPress", {
             inputId: "up",
