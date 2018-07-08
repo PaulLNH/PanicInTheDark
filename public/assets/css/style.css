@@ -16,8 +16,8 @@ body {
 
 body {
     background-color: black;
-    overflow-x: hidden;
-    overflow-y: hidden;
+    /* overflow-x: hidden;
+    overflow-y: hidden; */
 }
 
 #chat-text {
@@ -29,12 +29,8 @@ body {
 #gameDiv {
     margin-left: auto;
     margin-right: auto;
-    /* overflow: hidden; */
     padding: 10px 0;
-    /* align-items: center;
-    justify-content: space-around; */
     display: block;
-    /* float: none; */
 }
 
 .control-label {
