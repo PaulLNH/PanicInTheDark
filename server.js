@@ -11,7 +11,6 @@ var addUser = test.addUser;
 var timer = test.timer;
 var huntTeam = test.huntTeam;
 var updateLeaderboard = test.updateLeaderboard;
-// var time = 300;
 
 var frames = 30;
 
@@ -76,7 +75,7 @@ io.sockets.on("connection", function (socket) {
             player: Player.update()
         };
         for (var i in SOCKET_LIST) {
-            SOCKET_LIST[i].emit("addToChat", pack, "Has left the game.", socket.id);
+            SOCKET_LIST[i].emit("addToChat", pack, "<em>Has left the game.</em>", socket.id);
         }
         Player.onDisconnect(socket);
     });

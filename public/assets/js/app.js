@@ -61,48 +61,8 @@ var darkness = 1;
 var dark_color = "black";
 var vision_rd = 100;
 
-// // init
-// var Player = function(initPack) {
-//   var self = {
-//     id: initPack.id,
-//     number: initPack.number,
-//     x: initPack.x,
-//     y: initPack.y
-//   };
-//   return self;
-// };
-// var playerList = {};
-
-// socket.on("init", function(data) {
-//   for (var i = 0; i < data.player.length; i++) {
-//     new Player(data.player[i]);
-//   }
-// });
-// // update
-// socket.on("update", function(data) {
-//   for (var i = 0; i < data.player.length; i++) {
-//     var pack = data.player[i];
-//     var p = Player.list[pack.id];
-//     if (p) {
-//       if (p.x !== undefined) {
-//         p.x = pack.x;
-//       }
-//       if (p.y !== undefined) {
-//         p.y = pack.y;
-//       }
-//     }
-//   }
-// });
-
-// remove
-
 socket.on("newPositions", function (data) {
-    // console.log(JSON.stringify(data));
-    // console.log(data.time);
-    // console.log(data.huntTeam);
-    // gameTimer_div.innerHTML = "Time left in round: " + data.time + " - ";
     gameTimer_div.innerHTML = waitingOnPlayers(data.time) + " - ";
-    // We have to call the index of data.player[0] to access huntTeam if we push it to the pack in the Player.update logic. Ruins our death logic though...
     huntTeam_div.innerHTML = "Hunting Team: " + data.huntTeam;
     leaderBoard.innerHTML = "<h3>Leaderboard:</h3><br>" + data.updateLeaderboard;
     ctx.clearRect(0, 0, 640, 480);
@@ -176,7 +136,6 @@ socket.on("addToChat", function (pack, data, userID) {
             playerName = pack.player[i].username;
         }
     }
-
     chatText.innerHTML +=
         "<div><strong>" + playerName + "</strong>: " + data + "</div>";
 });
