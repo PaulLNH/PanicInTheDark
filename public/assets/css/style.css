@@ -21,6 +21,13 @@ body {
     position: relative;
 }
 
+.status_div {
+    color: rgb(146, 0, 0);
+    font-family: 'Special Elite', cursive;
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
 #ctx,
 #ctxv {
     position: absolute;

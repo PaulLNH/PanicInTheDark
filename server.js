@@ -8,6 +8,9 @@ var USERS = test.USERS;
 var isValidPassword = test.isValidPassword;
 var isUsernameTaken = test.isUsernameTaken;
 var addUser = test.addUser;
+var stopwatch = test.stopwatch;
+var huntTeam = test.huntTeam;
+var time = 300;
 
 var frames = 30;
 
@@ -16,8 +19,8 @@ const app = express();
 const serv = require("http").Server(app);
 const PORT = process.env.PORT || 8080;
 
-app.get("/", function(req, res) {
-  res.sendFile(__dirname + "/public/index.html");
+app.get("/", function (req, res) {
+    res.sendFile(__dirname + "/public/index.html");
 });
 app.use("/public", express.static(__dirname + "/public"));
 
@@ -25,68 +28,79 @@ serv.listen(PORT);
 console.log(`Server started. localhost:${PORT}`);
 
 var io = require("socket.io")(serv, {});
-io.sockets.on("connection", function(socket) {
-  // socket.id = Math.random();
-  SOCKET_LIST[socket.id] = socket;
+io.sockets.on("connection", function (socket) {
+    // socket.id = Math.random();
+    // stopwatch.start();
+    SOCKET_LIST[socket.id] = socket;
 
-  socket.on("signIn", function(data) {
-    isValidPassword(data, function(res) {
-      if (res) {
-        Player.onConnect(socket, data);
-        socket.emit("signInResponse", {
-          success: true
+    socket.on("signIn", function (data) {
+        isValidPassword(data, function (res) {
+            if (res) {
+                Player.onConnect(socket, data);
+                socket.emit("signInResponse", {
+                    success: true
+                });
+            } else {
+                socket.emit("signInResponse", {
+                    success: false
+                });
+            }
         });
-      } else {
-        socket.emit("signInResponse", {
-          success: false
-        });
-      }
     });
-  });
-  socket.on("signUp", function(data) {
-    isUsernameTaken(data, function(res) {
-      if (res) {
-        socket.emit("signUpResponse", {
-          success: false
+    socket.on("signUp", function (data) {
+        isUsernameTaken(data, function (res) {
+            if (res) {
+                socket.emit("signUpResponse", {
+                    success: false
+                });
+            } else {
+                addUser(data, function () {
+                    socket.emit("signUpResponse", {
+                        success: true
+                    });
+                });
+            }
         });
-      } else {
-        addUser(data, function() {
-          socket.emit("signUpResponse", {
-            success: true
-          });
-        });
-      }
     });
-  });
 
-  socket.on("disconnect", function() {
-    delete SOCKET_LIST[socket.id];
-    Player.onDisconnect(socket);
-  });
-  socket.on("sendMsgToServer", function(data, userID) {
+    socket.on("disconnect", function () {
+        delete SOCKET_LIST[socket.id];
+        Player.onDisconnect(socket);
+    });
+    socket.on("sendMsgToServer", function (data, userID) {
+        var pack = {
+            player: Player.update()
+        };
+
+        for (var i in SOCKET_LIST) {
+            SOCKET_LIST[i].emit("addToChat", pack, data, userID);
+        }
+    });
+
+    socket.on("evalServer", function (data) {
+        if (!DEBUG) return;
+        var res = eval(data);
+        socket.emit("evalAnswer", res);
+    });
+});
+
+
+setInterval(function () {
+    time--
+    if (time === -1) {
+        time = 300;
+    }
+    var seconds = Math.ceil(time / frames);
+    if (seconds < 10) {
+        seconds = "0" + seconds;
+    }
     var pack = {
-      player: Player.update()
+        time: seconds,
+        player: Player.update(time)
     };
 
     for (var i in SOCKET_LIST) {
-      SOCKET_LIST[i].emit("addToChat", pack, data, userID);
+        var socket = SOCKET_LIST[i];
+        socket.emit("newPositions", pack);
     }
-  });
-
-  socket.on("evalServer", function(data) {
-    if (!DEBUG) return;
-    var res = eval(data);
-    socket.emit("evalAnswer", res);
-  });
-});
-
-setInterval(function() {
-  var pack = {
-    player: Player.update()
-  };
-
-  for (var i in SOCKET_LIST) {
-    var socket = SOCKET_LIST[i];
-    socket.emit("newPositions", pack);
-  }
 }, 1000 / frames);
