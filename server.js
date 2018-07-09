@@ -8,9 +8,10 @@ var USERS = test.USERS;
 var isValidPassword = test.isValidPassword;
 var isUsernameTaken = test.isUsernameTaken;
 var addUser = test.addUser;
-var stopwatch = test.stopwatch;
+var timer = test.timer;
 var huntTeam = test.huntTeam;
-var time = 300;
+var updateLeaderboard = test.updateLeaderboard;
+// var time = 300;
 
 var frames = 30;
 
@@ -40,6 +41,12 @@ io.sockets.on("connection", function (socket) {
                 socket.emit("signInResponse", {
                     success: true
                 });
+                var pack = {
+                    player: Player.update()
+                };
+                for (var i in SOCKET_LIST) {
+                    SOCKET_LIST[i].emit("addToChat", pack, "<em>Has entered the game.</em>", socket.id);
+                }
             } else {
                 socket.emit("signInResponse", {
                     success: false
@@ -65,8 +72,15 @@ io.sockets.on("connection", function (socket) {
 
     socket.on("disconnect", function () {
         delete SOCKET_LIST[socket.id];
+        var pack = {
+            player: Player.update()
+        };
+        for (var i in SOCKET_LIST) {
+            SOCKET_LIST[i].emit("addToChat", pack, "Has left the game.", socket.id);
+        }
         Player.onDisconnect(socket);
     });
+
     socket.on("sendMsgToServer", function (data, userID) {
         var pack = {
             player: Player.update()
@@ -86,17 +100,11 @@ io.sockets.on("connection", function (socket) {
 
 
 setInterval(function () {
-    time--
-    if (time === -1) {
-        time = 300;
-    }
-    var seconds = Math.ceil(time / frames);
-    if (seconds < 10) {
-        seconds = "0" + seconds;
-    }
     var pack = {
-        time: seconds,
-        player: Player.update(time)
+        updateLeaderboard: updateLeaderboard(),
+        time: timer(),
+        huntTeam: huntTeam(),
+        player: Player.update()
     };
 
     for (var i in SOCKET_LIST) {

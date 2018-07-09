@@ -18,32 +18,68 @@
 </head>
 
 <body>
-    <!-- Login Modal -->
+    <!-- Instructions Modal -->
+    <div class="modal fade" id="instructionsModal" tabindex="-1" role="dialog" aria-labelledby="instructionsModal" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="instructionsModalTitle">Panic In The Dark:</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <!-- GAME INSTRUCTIONS GO HERE -->
+                    <ul>
+                        <li>Panic In The Dark is a game of cat and mouse between Humans and Zombies</li>
+                        <li>You are placed in a post apocalyptic hospital where the power surges every 10 seconds</li>
+                        <li>Humans can only see when the lights are on, Zombies can only see in the dark.</li>
+                        <li>When your team has vision of the map you are the 'Hunting Team' and can kill enemy players by running
+                            into them</li>
+                        <li>When your team is in the dark you must run from enemy players, or be killed.</li>
+                        <li>If you are killed you have to wait until the next power surge to come back into the match</li>
+                        <li>You accumilate points for time survived during darkness and for enemies you've killed while your
+                            team is hunting. You do not accumliate points while you are dead.</li>
+                        <li>
+                            <em>Will you survive the human race?</em>
+                        </li>
+                    </ul>
 
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Got it!</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <!-- Game window -->
     <div class="wrapper">
         <div class="row">
             <div id="signDiv" class="col-lg-4 offset-lg-4">
                 <img class="form-horizontal">
                 <h1>PANIC IN THE DARK</h1>
-                <div class="form-group">
-                    <label class="control-label col-sm-2" for="email">Username:</label>
-                    <div class="col-sm-10">
-                        <input class="form-control" id="signDiv-username" placeholder="Enter username">
+                <form>
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" for="email">Username:</label>
+                        <div class="col-sm-10">
+                            <input class="form-control" id="signDiv-username" placeholder="Enter username">
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <label class="control-label col-sm-2" for="pwd">Password:</label>
-                    <div class="col-sm-10">
-                        <input type="password" class="form-control" id="signDiv-password" placeholder="Enter password">
+                    <div class="form-group">
+                        <label class="control-label col-sm-2" for="pwd">Password:</label>
+                        <div class="col-sm-10">
+                            <input type="password" class="form-control" id="signDiv-password" placeholder="Enter password">
+                        </div>
                     </div>
-                </div>
-                <div class="form-group">
-                    <div class="col-sm-offset-2 col-sm-10">
-                        <button type="submit" class="btn btn-default" id="signDiv-signIn">Login</button>
-                        <button type="submit" class="btn btn-default" id="signDiv-signUp">Sign Up</button>
+                    <div class="form-group">
+                        <div class="col-sm-offset-2 col-sm-10 d-flex m-2-auto">
+                            <button type="submit" class="btn btn-success" id="signDiv-signIn">Login</button>&nbsp;
+                            <button type="submit" class="btn btn-secondary" id="signDiv-signUp">Sign Up</button>&nbsp;
+                            <button type="button" class="btn btn-dark" id="instructionsBtn" data-toggle="modal" data-target="#instructionsModal">
+                                How To Play
+                            </button>
+                        </div>
                     </div>
-                </div>
                 </form>
             </div>
 
@@ -57,6 +93,11 @@
                         <p>Your browser does not support HTML5 :(</p>
                     </canvas>
                     <canvas id="ctxv" width="640" height="480" style="border:1px solid #6e0000;"></canvas>
+                </div>
+                <div id="scoreBoard">
+                    <div>
+                        <h3>Leaderboard:</h3>
+                    </div>
                 </div>
 
                 <!-- <div id="chatDiv"> -->
@@ -74,6 +115,12 @@
         </div>
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm"
+        crossorigin="anonymous"></script>
     <script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
     <script src="./public/assets/js/app.js"></script>
     <script>

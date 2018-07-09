@@ -36,6 +36,34 @@ body {
     /* z-index: 100; */
 }
 
+ul {
+    list-style-type: none;
+}
+
+#scoreBoard {
+    top: 50px;
+    left: 660px;
+    position: absolute;
+    color: rgb(146, 0, 0);
+    font-family: 'Special Elite', cursive;
+    font-size: 1em;
+}
+
+#instructionsBtn {
+    /* width: 100%; */
+    flex-grow: 1;
+}
+
+.modal {
+    background-color: black !important;
+}
+
+.modal-content {
+    background-color: #e4e4e4;
+    /* background-color: #343a40; */
+    /* color: white; */
+}
+
 body {
     background-color: black;
     overflow-x: hidden;

@@ -52,6 +52,7 @@ socket.on("signUpResponse", function (data) {
 const chatText = document.getElementById("chat-text");
 const chatInput = document.getElementById("chat-input");
 const chatForm = document.getElementById("chat-form");
+const leaderBoard = document.getElementById("scoreBoard");
 const ctx = document.getElementById("ctx").getContext("2d");
 const ctxv = document.getElementById("ctxv").getContext("2d");
 ctx.font = "15px Arial bold ";
@@ -99,9 +100,11 @@ socket.on("newPositions", function (data) {
     // console.log(JSON.stringify(data));
     // console.log(data.time);
     // console.log(data.huntTeam);
-    gameTimer_div.innerHTML = "Time left for round: " + data.time + " - ";
+    // gameTimer_div.innerHTML = "Time left in round: " + data.time + " - ";
+    gameTimer_div.innerHTML = waitingOnPlayers(data.time) + " - ";
     // We have to call the index of data.player[0] to access huntTeam if we push it to the pack in the Player.update logic. Ruins our death logic though...
-    // huntTeam_div.innerHTML = "Hunting Team: " + data.player[0].huntTeam;
+    huntTeam_div.innerHTML = "Hunting Team: " + data.huntTeam;
+    leaderBoard.innerHTML = "<h3>Leaderboard:</h3><br>" + data.updateLeaderboard;
     ctx.clearRect(0, 0, 640, 480);
     ctx.drawImage(Img.map, 0, 0);
     for (var i = 0; i < data.player.length; i++) {
@@ -129,6 +132,14 @@ socket.on("newPositions", function (data) {
 
     }
 });
+
+var waitingOnPlayers = function (time) {
+    if (time == undefined) {
+        return "Waiting for more players"
+    } else {
+        return "Time left in round: " + time
+    }
+}
 
 function draw(data, i) {
     let x = data.player[i].x;
@@ -184,25 +195,25 @@ chatForm.onsubmit = function (e) {
 
 document.onkeydown = function (event) {
     if (event.keyCode === 68 || event.keyCode === 39)
-        //d
+        //d or right arrow
         socket.emit("keyPress", {
             inputId: "right",
             state: true
         });
     else if (event.keyCode === 83 || event.keyCode === 40)
-        //s
+        //s or down arrow
         socket.emit("keyPress", {
             inputId: "down",
             state: true
         });
     else if (event.keyCode === 65 || event.keyCode === 37)
-        //a
+        //a or left arrow
         socket.emit("keyPress", {
             inputId: "left",
             state: true
         });
     else if (event.keyCode === 87 || event.keyCode === 38)
-        // w
+        // w or up arrow
         socket.emit("keyPress", {
             inputId: "up",
             state: true
@@ -210,25 +221,25 @@ document.onkeydown = function (event) {
 };
 document.onkeyup = function (event) {
     if (event.keyCode === 68 || event.keyCode === 39)
-        //d
+        //d or right arrow
         socket.emit("keyPress", {
             inputId: "right",
             state: false
         });
     else if (event.keyCode === 83 || event.keyCode === 40)
-        //s
+        //s or down arrow
         socket.emit("keyPress", {
             inputId: "down",
             state: false
         });
     else if (event.keyCode === 65 || event.keyCode === 37)
-        //a
+        //a or left arrow
         socket.emit("keyPress", {
             inputId: "left",
             state: false
         });
     else if (event.keyCode === 87 || event.keyCode === 38)
-        // w
+        // w or up arrow
         socket.emit("keyPress", {
             inputId: "up",
             state: false

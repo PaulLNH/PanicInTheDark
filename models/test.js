@@ -1,5 +1,6 @@
 console.log(`File loaded: ../public/assets/js/test.js`);
 
+// SOCKET_LIST may not be getting updated with removed sockets on this file.
 var SOCKET_LIST = {};
 
 const grid = [
@@ -1269,56 +1270,34 @@ const WIDTH = 640;
 const HEIGHT = 480;
 // var huntTeam = "waiting"; // DO NOT FORGET ABOUT THIS OR YOU WILL GO MAD!
 var huntTeam = "zombie";
+var switchHuntTeam = false;
+var frames = 30;
+var time = 300;
 
-var stopwatch = {
-    clockRunning: false,
-    time: 10,
-    reset: function () {
-        stopwatch.time = 10;
-        // DONE: Change the "display" div to "00:00."
-        // $("#timer").text("10");
-    },
-    start: function () {
-        // DONE: Use setInterval to start the count here and set the clock to running.
-        if (!stopwatch.clockRunning) {
-            intervalId = setInterval(stopwatch.count, 1000);
-            stopwatch.clockRunning = true;
+var huntTeamStatus = function () {
+    if (switchHuntTeam && huntTeam === "human") {
+        huntTeam = "zombie";
+        switchHuntTeam = false;
+    } else if (switchHuntTeam && huntTeam === "zombie") {
+        huntTeam = "human";
+        switchHuntTeam = false;
+    }
+    return huntTeam
+};
+
+var timer = function () {
+    // Only start timer if two or more players are in game.
+    if (Object.keys(Player.list).length >= 2) {
+        time--
+        if (time === 0) {
+            switchHuntTeam = true;
+            time = 300;
         }
-    },
-    stop: function () {
-
-        // Use clearInterval to stop the count here and set the clock to not be running.
-        clearInterval(intervalId);
-        stopwatch.clockRunning = false;
-    },
-    count: function () {
-        // Increment time by 1, remember we cant use "this" here.
-        stopwatch.time = stopwatch.time - 1;
-        // Get the current time, pass that into the stopwatch.timeConverter function, and save the result in a variable.
-        var converted = stopwatch.timeConverter(stopwatch.time);
-        if (converted == "00") {
-            stopwatch.stop();
-            stopwatch.reset();
-            stopwatch.switchHuntTeam();
-            stopwatch.start();
-            // setTimeout(runNewQuestion, 5000);
-        }
-        console.log(converted);
-        // Use the variable we just created to show the converted time in the "display" div.
-    },
-    timeConverter: function (seconds) {
-
+        var seconds = Math.ceil(time / frames);
         if (seconds < 10) {
             seconds = "0" + seconds;
         }
-        return seconds;
-    },
-    switchHuntTeam: function () {
-        if (huntTeam === "human") {
-            huntTeam = "zombie";
-        } else if (huntTeam === "zombie") {
-            huntTeam = "human";
-        }
+        return seconds
     }
 };
 
@@ -1339,7 +1318,6 @@ var Player = function (id, username, team) {
         living: true,
         score: 0
     };
-    console.log(`Player.username: ${self.username}`);
 
     self.update = function () {
         self.updatePosition();
@@ -1407,9 +1385,11 @@ zombieList = [];
 Player.list = {};
 Player.onConnect = function (socket, data) {
     // var team = "";
+    console.log(`Human List size: ${humanList.length}`);
+    console.log(`Zombie List size: ${zombieList.length}`);
     if (humanList.length > zombieList.length) {
         // team = "zombie";
-
+        console.log(`${data.username} added to the Zombie team.`);
         var player = Player(socket.id, data.username, "zombie");
         socket.on("keyPress", function (data) {
             if (data.inputId === "left") player.pressingLeft = data.state;
@@ -1419,6 +1399,7 @@ Player.onConnect = function (socket, data) {
         });
     } else {
         // team = "human";
+        console.log(`${data.username} added to the Human team.`);
         var player = Player(socket.id, data.username, "human");
         socket.on("keyPress", function (data) {
             if (data.inputId === "left") player.pressingLeft = data.state;
@@ -1434,21 +1415,16 @@ Player.onDisconnect = function (socket) {
     delete Player.list[socket.id];
 };
 
-Player.update = function (t) {
+Player.update = function () {
     var pack = [];
     // Pushing huntTeam works in terms of the server knowing which team is current hunting team, breaks death though...
     // pack.push({
     //     huntTeam: huntTeam
     // });
-    // console.log(t);
-    // if (t === 0 && huntTeam === "human") {
-    //     huntTeam = "zombie";
-    //     console.log(`This is what the server.js thinks huntTeam is: ${huntTeam}`);
-    // } else if (t === 0 && huntTeam === "zombie") {
-    //     huntTeam = "human";
-    //     console.log(`This is what the server.js thinks huntTeam is: ${huntTeam}`);
-    // }
 
+    // THIS WORKS PROPERLY.
+    // huntTeamStatus();
+    // console.log(huntTeamStatus());
 
     // console.log(`This is what the test.js thinks huntTeam is: ${huntTeam}`);
     for (var i in Player.list) {
@@ -1493,7 +1469,6 @@ Player.update = function (t) {
             living: player.living
         });
     }
-
     return pack;
 };
 
@@ -1565,6 +1540,22 @@ Player.testCollision = function (entity2) {
     return testCollisionRectRect(rect1, rect2);
 };
 
+var updateLeaderboard = function () {
+    let currentPlayers = [];
+    let leaderBoard = "<ul>";
+    for (let i in Player.list) {
+        currentPlayers.push(Player.list[i]);
+    }
+    currentPlayers.sort(function (a, b) {
+        return a.score - b.score;
+    });
+    for (let j in currentPlayers) {
+        leaderBoard += "<li>" + currentPlayers[j].username + ": " + currentPlayers[j].score + "</li>";
+    }
+    leaderBoard += "</ul>"
+    return leaderBoard
+}
+
 module.exports = {
     Player: Player,
     SOCKET_LIST: SOCKET_LIST,
@@ -1573,6 +1564,7 @@ module.exports = {
     isValidPassword: isValidPassword,
     isUsernameTaken: isUsernameTaken,
     addUser: addUser,
-    stopwatch: stopwatch,
-    huntTeam: huntTeam
+    timer: timer,
+    huntTeam: huntTeamStatus,
+    updateLeaderboard: updateLeaderboard
 };
