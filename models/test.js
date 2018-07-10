@@ -1268,7 +1268,7 @@ const grid = [
 const TILE_SIZE = 16;
 const WIDTH = 640;
 const HEIGHT = 480;
-const spawnPoints = [[250,230],[60,230],[500,230]];
+const spawnPoints = [[300,235],[90,235],[550,235],[50,60],[50,150],[50,335],[50,435],[250,60],[250,150],[185,60],[185,150],[185,435],[175,335],[250,335],[250,435],[370,60],[400,150],[400,335],[400,435],[480,60],[600,60],[450,150],[580,150],[450,335],[580,435],[600,335],[450,430]];
 // var huntTeam = "waiting"; // DO NOT FORGET ABOUT THIS OR YOU WILL GO MAD!
 var huntTeam = "Zombie";
 var switchHuntTeam = false;
@@ -1322,8 +1322,8 @@ var Player = function (id, username, team) {
         username: username,
         number: "" + Math.floor(10 * Math.random()), // Probably not needed
         maxSpd: 4,
-        x: 250,
-        y: 230,
+        x: 300,
+        y: 235,
         spdX: 0,
         spdY: 0,
         width: 14,
