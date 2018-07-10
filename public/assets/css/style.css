@@ -40,6 +40,12 @@ ul {
     list-style-type: none;
 }
 
+#chat_window_header {
+    color: rgb(146, 0, 0);
+    font-family: 'Special Elite', cursive;
+    font-size: 1em;
+}
+
 #rightPanel {
     top: 50px;
     left: 660px;
