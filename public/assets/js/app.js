@@ -103,25 +103,54 @@ socket.on("newPositions", function (data) {
     // gameTimer_div.innerHTML = "Time left in round: " + data.time + " - ";
     gameTimer_div.innerHTML = waitingOnPlayers(data.time) + " - ";
     // We have to call the index of data.player[0] to access huntTeam if we push it to the pack in the Player.update logic. Ruins our death logic though...
-    huntTeam_div.innerHTML = "Hunting Team: " + data.huntTeam;
-    leaderBoard.innerHTML = "<h3>Leaderboard:</h3><br>" + data.updateLeaderboard;
+    if (data.huntTeam == "Zombie") {
+        huntTeam_div.innerHTML = "Hunting Team: <font color='red'>" + data.huntTeam + "</font>";
+    } else if (data.huntTeam == "Human") {
+        huntTeam_div.innerHTML = "Hunting Team: <font color='blue'>" + data.huntTeam + "</font>";
+    }
+
+    leaderBoard.innerHTML = "<h3>Leaderboard:</h3>" + data.updateLeaderboard;
     ctx.clearRect(0, 0, 640, 480);
     ctx.drawImage(Img.map, 0, 0);
     for (var i = 0; i < data.player.length; i++) {
 
+        console.log(data.player[i]);
         if (data.player[i].living) {
             // Manually added offsets to x and y to put collision point at the center of the players knees
             ctx.drawImage(Img.player, data.player[i].x - 6, data.player[i].y - 20);
+
+            // console.log(`Data Player ID ${data.player[i].id}`);
+            // console.log(`Socket ID ${socket.id}`);
+            // console.log(`Data Player username ${data.player[i].username}`);
+            // console.log(`Data Player Living Status ${data.player[i].living}`);
+
             if (data.player[i].id == socket.id) {
-                draw(data, i);
+                if (data.player[i].team !== data.huntTeam) {
+                    draw(data, i);
+                }
+                else {
+                    ctxv.save();
+                    // ctxv.fillStyle = "#ff0000";
+                    // ctxv.font = "40px Arial bold ";
+                    ctxv.clearRect(0, 0, 640, 480);
+                    // ctxv.fillText("You have died!", 200, 254);
+                    ctxv.restore();
+                }
+                // console.log("In Draw Darkness Function");
             }
+            
             // Draws username above players head
             ctx.save();
-            ctx.fillStyle = "#ff0000";
+            if (data.player[i].team == "Zombie") {
+                ctx.fillStyle = "#ff0000";
+            } else if (data.player[i].team == "Human") {
+                ctx.fillStyle = "#0000ff";
+            }
             var userNameLength = data.player[i].username.length;
             ctx.fillText(data.player[i].username, data.player[i].x - (userNameLength * 3), data.player[i].y - 23);
             ctx.restore();
-        } else {
+        } else if (data.player[i].living == false && data.player[i].id == socket.id) {
+            // console.log("HERE");
             ctxv.save();
             ctxv.fillStyle = "#ff0000";
             ctxv.font = "40px Arial bold ";
@@ -137,7 +166,7 @@ var waitingOnPlayers = function (time) {
     if (time == undefined) {
         return "Waiting for more players"
     } else {
-        return "Time left in round: " + time
+        return "Time left in round: <font color='white'>" + time + "</font>"
     }
 }
 
@@ -178,7 +207,7 @@ socket.on("addToChat", function (pack, data, userID) {
     }
 
     chatText.innerHTML +=
-        "<div><strong>" + playerName + "</strong>: " + data + "</div>";
+        "<div><strong><font color='white'>" + playerName + ":</font></strong> " + data + "</div>";
 });
 socket.on("evalAnswer", function (data) {
     console.log(data);
@@ -190,7 +219,9 @@ chatForm.onsubmit = function (e) {
         socket.emit("evalServer", chatInput.value.slice(1));
     else socket.emit("sendMsgToServer", chatInput.value, socket.id);
     chatInput.value = "";
-    chatInput.blur();
+    var height = 440;
+    $('chat-text').animate({scrollTop: height});
+    // chatInput.blur();
 };
 
 document.onkeydown = function (event) {

@@ -1268,18 +1268,19 @@ const grid = [
 const TILE_SIZE = 16;
 const WIDTH = 640;
 const HEIGHT = 480;
+const spawnPoints = [[250,230],[60,230],[500,230]];
 // var huntTeam = "waiting"; // DO NOT FORGET ABOUT THIS OR YOU WILL GO MAD!
-var huntTeam = "zombie";
+var huntTeam = "Zombie";
 var switchHuntTeam = false;
 var frames = 30;
 var time = 300;
 
 var huntTeamStatus = function () {
-    if (switchHuntTeam && huntTeam === "human") {
-        huntTeam = "zombie";
+    if (switchHuntTeam && huntTeam === "Human") {
+        huntTeam = "Zombie";
         switchHuntTeam = false;
-    } else if (switchHuntTeam && huntTeam === "zombie") {
-        huntTeam = "human";
+    } else if (switchHuntTeam && huntTeam === "Zombie") {
+        huntTeam = "Human";
         switchHuntTeam = false;
     }
     return huntTeam
@@ -1292,6 +1293,8 @@ var timer = function () {
         if (time === 0) {
             switchHuntTeam = true;
             time = 300;
+            resurrection();
+
         }
         var seconds = Math.ceil(time / frames);
         if (seconds < 10) {
@@ -1301,6 +1304,18 @@ var timer = function () {
     }
 };
 
+var resurrection = function () {
+    // Object.keys(Player.list)
+    for (var i in Player.list) {
+        if (Player.list[i].living == false) {
+            Player.list[i].living = true;
+            Player.list[i].spawnLocation();
+        }
+        console.log(Player.list[i].username + Player.list[i].living)
+    }
+
+}
+
 var Player = function (id, username, team) {
     var self = {
         id: id,
@@ -1308,7 +1323,7 @@ var Player = function (id, username, team) {
         number: "" + Math.floor(10 * Math.random()), // Probably not needed
         maxSpd: 4,
         x: 250,
-        y: 225,
+        y: 230,
         spdX: 0,
         spdY: 0,
         width: 14,
@@ -1370,7 +1385,23 @@ var Player = function (id, username, team) {
 
     Player.list[id] = self;
 
-    if (self.team == "zombie") {
+    self.spawnLocation = function () {
+        for (var i in Player.list) {
+            if (Player.list[i].id !== self.id) {
+                if (testCollisionRectRect(self, Player.list[i])) {
+                    console.log("Player too close");
+
+                    var spawnIndex = Math.floor(Math.random()*spawnPoints.length);
+                    console.log(spawnIndex);
+                    self.x = spawnPoints[spawnIndex][0];
+                    self.y = spawnPoints[spawnIndex][1];
+                    self.spawnLocation()
+                }
+            }
+        }
+    }
+
+    if (self.team == "Zombie") {
         zombieList.push(self);
     } else {
         humanList.push(self);
@@ -1378,6 +1409,8 @@ var Player = function (id, username, team) {
 
     return self;
 };
+
+
 
 humanList = [];
 zombieList = [];
@@ -1390,7 +1423,8 @@ Player.onConnect = function (socket, data) {
     if (humanList.length > zombieList.length) {
         // team = "zombie";
         console.log(`${data.username} added to the Zombie team.`);
-        var player = Player(socket.id, data.username, "zombie");
+        var player = Player(socket.id, data.username, "Zombie"); // Initialize Player
+        player.spawnLocation();
         socket.on("keyPress", function (data) {
             if (data.inputId === "left") player.pressingLeft = data.state;
             else if (data.inputId === "right") player.pressingRight = data.state;
@@ -1400,7 +1434,8 @@ Player.onConnect = function (socket, data) {
     } else {
         // team = "human";
         console.log(`${data.username} added to the Human team.`);
-        var player = Player(socket.id, data.username, "human");
+        var player = Player(socket.id, data.username, "Human");
+        player.spawnLocation();
         socket.on("keyPress", function (data) {
             if (data.inputId === "left") player.pressingLeft = data.state;
             else if (data.inputId === "right") player.pressingRight = data.state;
@@ -1432,7 +1467,7 @@ Player.update = function () {
         player.update();
 
         switch (player.team) {
-            case "zombie":
+            case "Zombie":
                 for (var j in humanList) {
                     if (testCollisionRectRect(player, humanList[j]) && humanList[j].living && Player.list[i].living) {
 
@@ -1440,16 +1475,28 @@ Player.update = function () {
                         for (var k in Player.list) {
                             if (Player.list[k].id == humanList[j].id) {
                                 switch (huntTeam) {
-                                    case "zombie":
+                                    case "Zombie":
                                         console.log(`Before for zombie: Player ${Player.list[k].username} status of living is now ${Player.list[k].living}`);
+                                        // console.log(`Before for zombiie: Player ID is ${Player.list[k].id}`);
                                         Player.list[k].living = false;
                                         humanList[j].living = false;
+                                        Player.list[k].score = 0;
+                                        Player.list[i].score += 10;
+                                        console.log(`Player ${Player.list[i].username} : ${Player.list[i].score}`);
+                                        console.log(`Player ${Player.list[k].username} : ${Player.list[k].score}`);
                                         console.log(`After for zombie: Player ${Player.list[k].username} status of living is now ${Player.list[k].living}`);
+                                        // console.log(`After for zombiie: Player ID is ${Player.list[k].id}`);
                                         break;
-                                    case "human":
+                                    case "Human":
                                         console.log(`Before for human: Player ${Player.list[i].username} status of living is now ${Player.list[i].living}`);
+                                        // console.log(`Before for human: Player ID is ${Player.list[i].id}`);
                                         Player.list[i].living = false;
+                                        Player.list[i].score = 0;
+                                        Player.list[k].score += 10;
+                                        console.log(`Player ${Player.list[i].username} : ${Player.list[i].score}`);
+                                        console.log(`Player ${Player.list[k].username} : ${Player.list[k].score}`);
                                         console.log(`After for human: Player ${Player.list[i].username} status of living is now ${Player.list[i].living}`);
+                                        // console.log(`After for human: Player ID is ${Player.list[i].id}`);
                                         break;
                                 }
                             }
@@ -1457,7 +1504,7 @@ Player.update = function () {
                     }
                 }
                 break;
-            case "human":
+            case "Human":
                 break;
         }
 
@@ -1465,6 +1512,7 @@ Player.update = function () {
             x: player.x,
             y: player.y,
             id: player.id,
+            team: player.team,
             username: player.username,
             living: player.living
         });
@@ -1547,10 +1595,10 @@ var updateLeaderboard = function () {
         currentPlayers.push(Player.list[i]);
     }
     currentPlayers.sort(function (a, b) {
-        return a.score - b.score;
+        return b.score - a.score;
     });
     for (let j in currentPlayers) {
-        leaderBoard += "<li>" + currentPlayers[j].username + ": " + currentPlayers[j].score + "</li>";
+        leaderBoard += "<li><font color='white'>" + currentPlayers[j].username + ":</font> " + currentPlayers[j].score + "</li>";
     }
     leaderBoard += "</ul>"
     return leaderBoard

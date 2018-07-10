@@ -40,13 +40,54 @@ ul {
     list-style-type: none;
 }
 
-#scoreBoard {
+#rightPanel {
     top: 50px;
     left: 660px;
+    position: absolute;
+    width: 45%;
+    height: 480px;
+    color: rgb(146, 0, 0);
+    font-family: 'Special Elite', cursive;
+    font-size: 1em;
+    /* overflow: auto; */
+}
+
+#chat-text {
+    /* top: 50px;
+    left: 660px;
+    position: absolute;
+    width: 15%;
+    color: rgb(146, 0, 0);
+    font-family: 'Special Elite', cursive;
+    font-size: 1em; */
+    height: 440px;
+    overflow-y: scroll;
+}
+
+#chatPanel {
+    padding-top: 5px;
+}
+
+#scoreBoard {
+    padding-left: 5px;
+    top: 250px;
+    left: -300px;
     position: absolute;
     color: rgb(146, 0, 0);
     font-family: 'Special Elite', cursive;
     font-size: 1em;
+}
+
+#instructions {
+    padding-left: 5px;
+    top: 50px;
+    left: -300px;
+    width: 45%;
+    position: absolute;
+    color: rgb(146, 0, 0);
+    font-family: 'Special Elite', cursive;
+    font-size: 1em;
+    font-weight: 700;
 }
 
 #instructionsBtn {
@@ -70,11 +111,17 @@ body {
     /* overflow-y: hidden; */
 }
 
-#chat-text {
+/* #scoreBoard {
     background: gray;
     padding: 5px;
     margin: 0;
-}
+} */
+
+/* #chat-text {
+    background: gray;
+    padding: 5px;
+    margin: 0;
+} */
 
 #gameDiv {
     margin: 0 auto;
