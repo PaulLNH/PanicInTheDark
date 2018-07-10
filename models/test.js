@@ -1321,14 +1321,14 @@ var Player = function (id, username, team) {
         id: id,
         username: username,
         number: "" + Math.floor(10 * Math.random()), // Probably not needed
-        maxSpd: 4,
+        maxSpd: 5,
+        minSpd: 4,
         x: 300,
         y: 235,
         spdX: 0,
         spdY: 0,
         width: 14,
         height: 25,
-        maxSpd: 4,
         team: team,
         living: true,
         score: 0
@@ -1552,32 +1552,32 @@ var DEBUG = true;
 
 var USERS = {
     //username:password
-    paul: "123",
-    jashan: "123",
-    corey: "123",
-    sean: "123",
-    jessica: "123",
-    ian: "123",
-    ty: "123",
-    jesse: "123",
-    amy: "123",
-    bobathy: "123",
-    matt: "123",
-    adam: "123",
-    dave: "123",
-    steve1: "123",
-    steve2: "123",
-    james: "123",
-    dexter: "123",
-    art: "123",
-    roxy: "123",
-    ryan: "123",
-    jason: "123",
-    molly: "123",
-    jamesM: "123",
-    shelby: "123",
-    josh: "123",
-    joanna: "123"
+    Paul: "123",
+    Jashan: "123",
+    Corey: "123",
+    Sean: "123",
+    Jessica: "123",
+    Ian: "123",
+    Ty: "123",
+    Jesse: "123",
+    Amy: "123",
+    Bobathy: "123",
+    Matt: "123",
+    Adam: "123",
+    Dave: "123",
+    Steve1: "123",
+    Steve2: "123",
+    James: "123",
+    Dexter: "123",
+    Art: "123",
+    Roxy: "123",
+    Ryan: "123",
+    Jason: "123",
+    Molly: "123",
+    JamesM: "123",
+    Shelby: "123",
+    Josh: "123",
+    Joanna: "123"
 };
 
 var isValidPassword = function (data, cb) {
@@ -1630,7 +1630,7 @@ Player.testCollision = function (entity2) {
 
 var updateLeaderboard = function () {
     let currentPlayers = [];
-    let leaderBoard = "<ul>";
+    let leaderBoard = "<p>";
     for (let i in Player.list) {
         currentPlayers.push(Player.list[i]);
     }
@@ -1639,12 +1639,12 @@ var updateLeaderboard = function () {
     });
     for (let j in currentPlayers) {
         if (currentPlayers[j].team == "Zombie") {
-            leaderBoard += "<li><font color='red'>" + currentPlayers[j].username + ":</font> " + "<font color='white'>" + currentPlayers[j].score + "</font></li>";
+            leaderBoard += "<font color='red'>  " + currentPlayers[j].username + ":</font> " + "<font color='white'>" + currentPlayers[j].score + "</font></br>";
         } else if (currentPlayers[j].team == "Human") {
-            leaderBoard += "<li><font color='blue'>" + currentPlayers[j].username + ":</font> " + "<font color='white'>" + currentPlayers[j].score + "</font></li>";
+            leaderBoard += "<font color='blue'>  " + currentPlayers[j].username + ":</font> " + "<font color='white'>" + currentPlayers[j].score + "</font></br>";
         }
     }
-    leaderBoard += "</ul>"
+    leaderBoard += "</p>"
     return leaderBoard
 }
 
