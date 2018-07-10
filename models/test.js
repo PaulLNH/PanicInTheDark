@@ -1391,7 +1391,7 @@ var Player = function (id, username, team) {
                 if (testCollisionRectRect(self, Player.list[i])) {
                     console.log("Player too close");
 
-                    var spawnIndex = Math.floor(Math.random()*spawnPoints.length);
+                    var spawnIndex = Math.floor(Math.random() * spawnPoints.length);
                     console.log(spawnIndex);
                     self.x = spawnPoints[spawnIndex][0];
                     self.y = spawnPoints[spawnIndex][1];
