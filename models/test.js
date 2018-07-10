@@ -1447,6 +1447,25 @@ Player.onConnect = function (socket, data) {
 };
 
 Player.onDisconnect = function (socket) {
+
+    // console.log(`Human List: ${humanList}`);
+    // console.log(`Zombie List: ${zombieList}`);
+
+    for (var i in humanList) {
+        if (humanList[i].id == socket.id) {
+            humanList.splice(i,1);
+        }
+    }
+    for (var j in zombieList) {
+        if (zombieList[j].id == socket.id) {
+            zombieList.splice(j,1);
+        }
+    }
+
+    // console.log(`Human List: ${humanList}`);
+    // console.log(`Zombie List: ${zombieList}`);
+
+
     delete Player.list[socket.id];
 };
 
@@ -1514,7 +1533,8 @@ Player.update = function () {
             id: player.id,
             team: player.team,
             username: player.username,
-            living: player.living
+            living: player.living,
+            score: player.score
         });
     }
     return pack;
@@ -1535,9 +1555,29 @@ var USERS = {
     paul: "123",
     jashan: "123",
     corey: "123",
-    usainbolt: "123",
-    a: "123",
-    imaridiculouspersonwhoisbeingobnoxious: "123"
+    sean: "123",
+    jessica: "123",
+    ian: "123",
+    ty: "123",
+    jesse: "123",
+    amy: "123",
+    bobathy: "123",
+    matt: "123",
+    adam: "123",
+    dave: "123",
+    steve1: "123",
+    steve2: "123",
+    james: "123",
+    dexter: "123",
+    art: "123",
+    roxy: "123",
+    ryan: "123",
+    jason: "123",
+    molly: "123",
+    jamesM: "123",
+    shelby: "123",
+    josh: "123",
+    joanna: "123"
 };
 
 var isValidPassword = function (data, cb) {
@@ -1598,7 +1638,11 @@ var updateLeaderboard = function () {
         return b.score - a.score;
     });
     for (let j in currentPlayers) {
-        leaderBoard += "<li><font color='white'>" + currentPlayers[j].username + ":</font> " + currentPlayers[j].score + "</li>";
+        if (currentPlayers[j].team == "Zombie") {
+            leaderBoard += "<li><font color='red'>" + currentPlayers[j].username + ":</font> " + "<font color='white'>" + currentPlayers[j].score + "</font></li>";
+        } else if (currentPlayers[j].team == "Human") {
+            leaderBoard += "<li><font color='blue'>" + currentPlayers[j].username + ":</font> " + "<font color='white'>" + currentPlayers[j].score + "</font></li>";
+        }
     }
     leaderBoard += "</ul>"
     return leaderBoard
