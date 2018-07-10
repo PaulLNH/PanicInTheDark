@@ -61,40 +61,10 @@ var darkness = 1;
 var dark_color = "black";
 var vision_rd = 100;
 
-// // init
-// var Player = function(initPack) {
-//   var self = {
-//     id: initPack.id,
-//     number: initPack.number,
-//     x: initPack.x,
-//     y: initPack.y
-//   };
-//   return self;
-// };
-// var playerList = {};
-
-// socket.on("init", function(data) {
-//   for (var i = 0; i < data.player.length; i++) {
-//     new Player(data.player[i]);
-//   }
-// });
-// // update
-// socket.on("update", function(data) {
-//   for (var i = 0; i < data.player.length; i++) {
-//     var pack = data.player[i];
-//     var p = Player.list[pack.id];
-//     if (p) {
-//       if (p.x !== undefined) {
-//         p.x = pack.x;
-//       }
-//       if (p.y !== undefined) {
-//         p.y = pack.y;
-//       }
-//     }
-//   }
-// });
-
-// remove
+// Clears focus on chat box when pressing enter
+chatInput.addEventListener('keyup', function (e) {
+    if (e.which == 13) this.blur();
+});
 
 socket.on("newPositions", function (data) {
     // console.log(JSON.stringify(data));
@@ -127,8 +97,7 @@ socket.on("newPositions", function (data) {
             if (data.player[i].id == socket.id) {
                 if (data.player[i].team !== data.huntTeam) {
                     draw(data, i);
-                }
-                else {
+                } else {
                     ctxv.save();
                     // ctxv.fillStyle = "#ff0000";
                     // ctxv.font = "40px Arial bold ";
@@ -138,7 +107,7 @@ socket.on("newPositions", function (data) {
                 }
                 // console.log("In Draw Darkness Function");
             }
-            
+
             // Draws username above players head
             ctx.save();
             if (data.player[i].team == "Zombie") {
@@ -208,71 +177,79 @@ socket.on("addToChat", function (pack, data, userID) {
 
     chatText.innerHTML +=
         "<div><strong><font color='white'>" + playerName + ":</font></strong> " + data + "</div>";
+    chatText.scrollTop = chatText.scrollHeight;
 });
+
 socket.on("evalAnswer", function (data) {
     console.log(data);
 });
 
 chatForm.onsubmit = function (e) {
+    // chatInput.blur();
     e.preventDefault();
     if (chatInput.value[0] === "/")
         socket.emit("evalServer", chatInput.value.slice(1));
     else socket.emit("sendMsgToServer", chatInput.value, socket.id);
     chatInput.value = "";
     var height = 440;
-    $('chat-text').animate({scrollTop: height});
-    // chatInput.blur();
+    $('chat-text').animate({
+        scrollTop: height
+    });
 };
 
 document.onkeydown = function (event) {
-    if (event.keyCode === 68 || event.keyCode === 39)
-        //d or right arrow
-        socket.emit("keyPress", {
-            inputId: "right",
-            state: true
-        });
-    else if (event.keyCode === 83 || event.keyCode === 40)
-        //s or down arrow
-        socket.emit("keyPress", {
-            inputId: "down",
-            state: true
-        });
-    else if (event.keyCode === 65 || event.keyCode === 37)
-        //a or left arrow
-        socket.emit("keyPress", {
-            inputId: "left",
-            state: true
-        });
-    else if (event.keyCode === 87 || event.keyCode === 38)
-        // w or up arrow
-        socket.emit("keyPress", {
-            inputId: "up",
-            state: true
-        });
+    if (chatInput !== document.activeElement) {
+        if (event.keyCode === 68 || event.keyCode === 39)
+            //d or right arrow
+            socket.emit("keyPress", {
+                inputId: "right",
+                state: true
+            });
+        else if (event.keyCode === 83 || event.keyCode === 40)
+            //s or down arrow
+            socket.emit("keyPress", {
+                inputId: "down",
+                state: true
+            });
+        else if (event.keyCode === 65 || event.keyCode === 37)
+            //a or left arrow
+            socket.emit("keyPress", {
+                inputId: "left",
+                state: true
+            });
+        else if (event.keyCode === 87 || event.keyCode === 38)
+            // w or up arrow
+            socket.emit("keyPress", {
+                inputId: "up",
+                state: true
+            });
+    }
 };
 document.onkeyup = function (event) {
-    if (event.keyCode === 68 || event.keyCode === 39)
-        //d or right arrow
-        socket.emit("keyPress", {
-            inputId: "right",
-            state: false
-        });
-    else if (event.keyCode === 83 || event.keyCode === 40)
-        //s or down arrow
-        socket.emit("keyPress", {
-            inputId: "down",
-            state: false
-        });
-    else if (event.keyCode === 65 || event.keyCode === 37)
-        //a or left arrow
-        socket.emit("keyPress", {
-            inputId: "left",
-            state: false
-        });
-    else if (event.keyCode === 87 || event.keyCode === 38)
-        // w or up arrow
-        socket.emit("keyPress", {
-            inputId: "up",
-            state: false
-        });
+    if (chatInput !== document.activeElement) {
+        if (event.keyCode === 68 || event.keyCode === 39)
+            //d or right arrow
+            socket.emit("keyPress", {
+                inputId: "right",
+                state: false
+            });
+        else if (event.keyCode === 83 || event.keyCode === 40)
+            //s or down arrow
+            socket.emit("keyPress", {
+                inputId: "down",
+                state: false
+            });
+        else if (event.keyCode === 65 || event.keyCode === 37)
+            //a or left arrow
+            socket.emit("keyPress", {
+                inputId: "left",
+                state: false
+            });
+        else if (event.keyCode === 87 || event.keyCode === 38)
+            // w or up arrow
+            socket.emit("keyPress", {
+                inputId: "up",
+                state: false
+            });
+    }
 };

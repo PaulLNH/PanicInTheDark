@@ -1268,7 +1268,11 @@ const grid = [
 const TILE_SIZE = 16;
 const WIDTH = 640;
 const HEIGHT = 480;
-const spawnPoints = [[250,230],[60,230],[500,230]];
+const spawnPoints = [
+    [250, 230],
+    [60, 230],
+    [500, 230]
+];
 // var huntTeam = "waiting"; // DO NOT FORGET ABOUT THIS OR YOU WILL GO MAD!
 var huntTeam = "Zombie";
 var switchHuntTeam = false;
@@ -1391,7 +1395,7 @@ var Player = function (id, username, team) {
                 if (testCollisionRectRect(self, Player.list[i])) {
                     console.log("Player too close");
 
-                    var spawnIndex = Math.floor(Math.random()*spawnPoints.length);
+                    var spawnIndex = Math.floor(Math.random() * spawnPoints.length);
                     console.log(spawnIndex);
                     self.x = spawnPoints[spawnIndex][0];
                     self.y = spawnPoints[spawnIndex][1];
