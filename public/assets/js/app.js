@@ -17,6 +17,7 @@ Img.player = new Image();
 Img.player.src = "../public/assets/img/Player1.png";
 Img.map = new Image();
 Img.map.src = "../public/assets/img/hospital.png";
+bgMusic = new Audio('../public/assets/audio/bgMusic.mp3');
 
 signDivSignIn.addEventListener("click", function (event) {
     event.preventDefault();
@@ -36,6 +37,11 @@ signDivSignUp.addEventListener("click", function (event) {
 
 socket.on("signInResponse", function (data) {
     if (data.success) {
+        bgMusic.addEventListener('ended', function () {
+            this.currentTime = 0;
+            this.play();
+        }, false);
+        bgMusic.play();
         signDiv.style.display = "none";
         gameDiv.style.display = "inline-block";
     } else alert("Sign in unsuccessul.");
