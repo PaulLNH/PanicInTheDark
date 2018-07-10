@@ -1,4 +1,3 @@
-console.log(`File loaded: ../server.js`);
 const test = require("./models/test.js");
 
 var Player = test.Player;
@@ -30,8 +29,6 @@ console.log(`Server started. localhost:${PORT}`);
 
 var io = require("socket.io")(serv, {});
 io.sockets.on("connection", function (socket) {
-    // socket.id = Math.random();
-    // stopwatch.start();
     SOCKET_LIST[socket.id] = socket;
 
     socket.on("signIn", function (data) {

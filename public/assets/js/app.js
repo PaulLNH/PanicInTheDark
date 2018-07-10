@@ -1,7 +1,5 @@
-console.log(`File loaded: ../public/assets/js/app.js`);
 const socket = io();
 
-//sign
 const signDiv = document.getElementById("signDiv");
 const signDivUsername = document.getElementById("signDiv-username");
 const signDivSignIn = document.getElementById("signDiv-signIn");
@@ -48,7 +46,6 @@ socket.on("signUpResponse", function (data) {
     } else alert("Sign up unsuccessul.");
 });
 
-//game
 const chatText = document.getElementById("chat-text");
 const chatInput = document.getElementById("chat-input");
 const chatForm = document.getElementById("chat-form");
@@ -62,18 +59,12 @@ var darkness = 1;
 var dark_color = "black";
 var vision_rd = 100;
 
-// Clears focus on chat box when pressing enter
 chatInput.addEventListener('keyup', function (e) {
     if (e.which == 13) this.blur();
 });
 
 socket.on("newPositions", function (data) {
-    // console.log(JSON.stringify(data));
-    // console.log(data.time);
-    // console.log(data.huntTeam);
-    // gameTimer_div.innerHTML = "Time left in round: " + data.time + " - ";
     gameTimer_div.innerHTML = waitingOnPlayers(data.time) + " - ";
-    // We have to call the index of data.player[0] to access huntTeam if we push it to the pack in the Player.update logic. Ruins our death logic though...
     if (data.huntTeam == "Zombie") {
         huntTeam_div.innerHTML = "Hunting Team: <font color='red'>" + data.huntTeam + "</font>";
     } else if (data.huntTeam == "Human") {
@@ -90,31 +81,19 @@ socket.on("newPositions", function (data) {
                 team.innerHTML = "<h3>Your Team: <font color='blue'>" + data.player[i].team + "</font></h3><h5>Your Score: <font color='white'>" + data.player[i].score + "</font></h5>";
             }
         }
-        console.log(data.player[i]);
         if (data.player[i].living) {
-            // Manually added offsets to x and y to put collision point at the center of the players knees
             ctx.drawImage(Img.player, data.player[i].x - 6, data.player[i].y - 20);
-
-            // console.log(`Data Player ID ${data.player[i].id}`);
-            // console.log(`Socket ID ${socket.id}`);
-            // console.log(`Data Player username ${data.player[i].username}`);
-            // console.log(`Data Player Living Status ${data.player[i].living}`);
 
             if (data.player[i].id == socket.id) {
                 if (data.player[i].team !== data.huntTeam) {
                     draw(data, i);
                 } else {
                     ctxv.save();
-                    // ctxv.fillStyle = "#ff0000";
-                    // ctxv.font = "40px Arial bold ";
                     ctxv.clearRect(0, 0, 640, 480);
-                    // ctxv.fillText("You have died!", 200, 254);
                     ctxv.restore();
                 }
-                // console.log("In Draw Darkness Function");
             }
 
-            // Draws username above players head
             ctx.save();
             if (data.player[i].team == "Zombie") {
                 ctx.fillStyle = "#ff0000";
@@ -125,7 +104,6 @@ socket.on("newPositions", function (data) {
             ctx.fillText(data.player[i].username, data.player[i].x - (userNameLength * 3), data.player[i].y - 23);
             ctx.restore();
         } else if (data.player[i].living == false && data.player[i].id == socket.id) {
-            // console.log("HERE");
             ctxv.save();
             ctxv.fillStyle = "#ff0000";
             ctxv.font = "40px Arial bold ";
@@ -191,7 +169,6 @@ socket.on("evalAnswer", function (data) {
 });
 
 chatForm.onsubmit = function (e) {
-    // chatInput.blur();
     e.preventDefault();
     if (chatInput.value[0] === "/")
         socket.emit("evalServer", chatInput.value.slice(1));
@@ -206,25 +183,21 @@ chatForm.onsubmit = function (e) {
 document.onkeydown = function (event) {
     if (chatInput !== document.activeElement) {
         if (event.keyCode === 68 || event.keyCode === 39)
-            //d or right arrow
             socket.emit("keyPress", {
                 inputId: "right",
                 state: true
             });
         else if (event.keyCode === 83 || event.keyCode === 40)
-            //s or down arrow
             socket.emit("keyPress", {
                 inputId: "down",
                 state: true
             });
         else if (event.keyCode === 65 || event.keyCode === 37)
-            //a or left arrow
             socket.emit("keyPress", {
                 inputId: "left",
                 state: true
             });
         else if (event.keyCode === 87 || event.keyCode === 38)
-            // w or up arrow
             socket.emit("keyPress", {
                 inputId: "up",
                 state: true
@@ -234,25 +207,21 @@ document.onkeydown = function (event) {
 document.onkeyup = function (event) {
     if (chatInput !== document.activeElement) {
         if (event.keyCode === 68 || event.keyCode === 39)
-            //d or right arrow
             socket.emit("keyPress", {
                 inputId: "right",
                 state: false
             });
         else if (event.keyCode === 83 || event.keyCode === 40)
-            //s or down arrow
             socket.emit("keyPress", {
                 inputId: "down",
                 state: false
             });
         else if (event.keyCode === 65 || event.keyCode === 37)
-            //a or left arrow
             socket.emit("keyPress", {
                 inputId: "left",
                 state: false
             });
         else if (event.keyCode === 87 || event.keyCode === 38)
-            // w or up arrow
             socket.emit("keyPress", {
                 inputId: "up",
                 state: false

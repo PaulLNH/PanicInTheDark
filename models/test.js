@@ -1304,6 +1304,18 @@ var timer = function () {
     }
 };
 
+var aliveScore = function (p) {
+    if (Object.keys(Player.list).length >= 2 && p.team !== huntTeam && p.living) {
+        p.score++
+    }
+}
+
+setInterval(function () {
+    for (let l in Player.list) {
+        aliveScore(Player.list[l]);
+    }
+}, 1000);
+
 var resurrection = function () {
     // Object.keys(Player.list)
     for (var i in Player.list) {
@@ -1321,14 +1333,14 @@ var Player = function (id, username, team) {
         id: id,
         username: username,
         number: "" + Math.floor(10 * Math.random()), // Probably not needed
-        maxSpd: 5,
-        minSpd: 4,
+        maxSpd: 4,
         x: 300,
         y: 235,
         spdX: 0,
         spdY: 0,
         width: 14,
         height: 25,
+        maxSpd: 4,
         team: team,
         living: true,
         score: 0
@@ -1639,9 +1651,9 @@ var updateLeaderboard = function () {
     });
     for (let j in currentPlayers) {
         if (currentPlayers[j].team == "Zombie") {
-            leaderBoard += "<font color='red'>  " + currentPlayers[j].username + ":</font> " + "<font color='white'>" + currentPlayers[j].score + "</font></br>";
+            leaderBoard += "<font color='red'>" + currentPlayers[j].username + ":</font> " + "<font color='white'>" + currentPlayers[j].score + "</font></br>";
         } else if (currentPlayers[j].team == "Human") {
-            leaderBoard += "<font color='blue'>  " + currentPlayers[j].username + ":</font> " + "<font color='white'>" + currentPlayers[j].score + "</font></br>";
+            leaderBoard += "<font color='blue'>" + currentPlayers[j].username + ":</font> " + "<font color='white'>" + currentPlayers[j].score + "</font></br>";
         }
     }
     leaderBoard += "</p>"
