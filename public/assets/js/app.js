@@ -64,6 +64,7 @@ const chatText = document.getElementById("chat-text");
 const chatInput = document.getElementById("chat-input");
 const chatForm = document.getElementById("chat-form");
 const leaderBoard = document.getElementById("scoreBoard");
+const team = document.getElementById('team');
 const ctx = document.getElementById("ctx").getContext("2d");
 const ctxv = document.getElementById("ctxv").getContext("2d");
 ctx.font = "15px Arial bold ";
@@ -89,12 +90,17 @@ socket.on("newPositions", function (data) {
     } else if (data.huntTeam == "Human") {
         huntTeam_div.innerHTML = "Hunting Team: <font color='blue'>" + data.huntTeam + "</font>";
     }
-
     leaderBoard.innerHTML = "<h3>Leaderboard:</h3>" + data.updateLeaderboard;
     ctx.clearRect(0, 0, 640, 480);
     ctx.drawImage(Img.map, 0, 0);
     for (var i = 0; i < data.player.length; i++) {
-
+        if (data.player[i].id == socket.id) {
+            if (data.player[i].team == "Zombie") {
+                team.innerHTML = "<h3>Your Team: <font color='red'>" + data.player[i].team + "</font></h3><h5>Your Score: <font color='white'>" + data.player[i].score + "</font></h5>";
+            } else if (data.player[i].team == "Human") {
+                team.innerHTML = "<h3>Your Team: <font color='blue'>" + data.player[i].team + "</font></h3><h5>Your Score: <font color='white'>" + data.player[i].score + "</font></h5>";
+            }
+        }
         console.log(data.player[i]);
         if (data.player[i].living) {
             // Manually added offsets to x and y to put collision point at the center of the players knees

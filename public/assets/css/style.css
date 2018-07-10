@@ -78,6 +78,16 @@ ul {
 
 #scoreBoard {
     padding-left: 5px;
+    top: 350px;
+    left: -300px;
+    position: absolute;
+    color: rgb(146, 0, 0);
+    font-family: 'Special Elite', cursive;
+    font-size: 1em;
+}
+
+#team {
+    padding-left: 5px;
     top: 250px;
     left: -300px;
     position: absolute;
