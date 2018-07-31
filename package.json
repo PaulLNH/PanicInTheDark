@@ -29,5 +29,9 @@
   "bugs": {
     "url": "https://github.com/PaulLNH/PanicInTheDark/issues"
   },
-  "homepage": "https://github.com/PaulLNH/PanicInTheDark#readme"
+  "homepage": "https://github.com/PaulLNH/PanicInTheDark#readme",
+  "dependencies": {
+    "express": "^4.16.3",
+    "socket.io": "^2.1.1"
+  }
 }
